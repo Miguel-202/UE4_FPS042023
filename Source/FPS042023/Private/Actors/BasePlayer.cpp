@@ -12,16 +12,20 @@ ABasePlayer::ABasePlayer()
     SpringArm->SetupAttachment(RootComponent);
     SpringArm->bUsePawnControlRotation = true;
 
-    // Set the local position of the SpringArm to (0, 0, 60)
-    SpringArm->SetRelativeLocation(FVector(0.0f, 0.0f, 60.0f));
+    // Set the local position of the SpringArm to a 3th person view
+    SpringArm->SetRelativeLocation(FVector(30.0f, 140.0f, 50.0f));
 
 
     // Add a third person camera to the SpringArm
     Camera = CreateDefaultSubobject<UCameraComponent>(TEXT("Camera"));
     Camera->SetupAttachment(SpringArm);
 
-    // Set the local rotation of the Camera to (0, -20, 0)
-    Camera->SetRelativeRotation(FRotator(0.0f, -20.0f, 0.0f));
+    // Set the local rotation of the Camera in case of needed
+    Camera->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
+
+    CharacterMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
+
+
 }
 
 void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -40,7 +44,7 @@ void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
     //PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ABasePlayer::Jump);
 
     // Bind fire input
-    //PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &ABasePlayer::Fire);
+    PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &ABaseCharacter::Shoot);
 
     // Bind heal input
     //PlayerInputComponent->BindAction("Heal", IE_Pressed, this, &ABasePlayer::Heal);
@@ -58,3 +62,5 @@ void ABasePlayer::MoveRight(float AxisValue)
     FRotator MakeRotation = FRotator(0.0f, GetControlRotation().Yaw + 90.0f, 0.0f);
     AddMovementInput(MakeRotation.Vector(), AxisValue);
 }
+
+

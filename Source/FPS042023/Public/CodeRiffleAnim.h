@@ -6,6 +6,9 @@
 #include "Animation/AnimInstance.h"
 #include "CodeRiffleAnim.generated.h"
 
+
+
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnShoot)
 /**
  * 
  */
@@ -18,7 +21,21 @@ public:
 
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float Speed;
+
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	float Direction;
+
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool DebugShoot;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAnimSequence* FireAnimation;
+
+	UFUNCTION(BlueprintCallable, Category = "Animations")
+	void PlayShootAnimation();
+
+	UFUNCTION(BlueprintCallable, Category = "Animations")
+	void PersonaUpdate();
+	void Shoot();
 	
 };

@@ -9,7 +9,8 @@ ABaseCharacter::ABaseCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	GetMesh()->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
-
+	CharacterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
+	CharacterMesh->SetupAttachment(GetRootComponent());
 }
 
 // Called when the game starts or when spawned
@@ -17,6 +18,19 @@ void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 	
+   // Weapon = NewObject<ABaseWeaponRifle>();
+    //CharacterSkeletalMesh->SetupAttachment(GetRootComponent());
+
+    if (WeaponClass)
+    {
+        Weapon = GetWorld()->SpawnActor<ABaseWeaponRifle>(WeaponClass);
+        if (Weapon)
+        {
+            Weapon->SetOwningPawn(this);
+            //Atach to socket
+            Weapon->AttachToComponent(CharacterMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("WeaponSocket")); //WeaponSocket //pinky_01_l
+        }
+    }
 }
 
 // Called every frame
@@ -33,3 +47,8 @@ void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 
 }
 
+void ABaseCharacter::Shoot()
+{
+    Weapon->Shoot();
+    //Get CodeRifleAnim* from the CharacterMesh
+}
