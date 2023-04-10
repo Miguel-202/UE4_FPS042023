@@ -24,8 +24,6 @@ ABasePlayer::ABasePlayer()
     Camera->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
     CharacterMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
-
-
 }
 
 void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)

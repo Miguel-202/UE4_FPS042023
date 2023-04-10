@@ -27,10 +27,18 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	class UStaticMeshComponent* Mesh;
 
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+	FTimerHandle TimerHandle_DestroyProjectile;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
 	void HandleCollision(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void DestroyProjectile();
 
 };

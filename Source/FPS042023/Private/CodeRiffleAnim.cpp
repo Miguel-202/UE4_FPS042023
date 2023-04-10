@@ -19,6 +19,15 @@ void UCodeRiffleAnim::NativeUpdateAnimation(float DeltaSeconds)
 		// Calculate the direction of the pawn's movement and store it in the Direction variable
 		Direction = CalculateDirection(Velocity, Pawn->GetActorRotation());
 
+		// Get the input component from the pawn
+		UInputComponent* InputComponent = Pawn->FindComponentByClass<UInputComponent>();
+
+		// Bind the "shoot" action to the Shoot function of UCodeRiffleAnim
+		if (InputComponent)
+		{
+			InputComponent->BindAction("shoot", IE_Pressed, this, &UCodeRiffleAnim::Shoot);
+		}
+
 		PersonaUpdate();
 	}
 	else
@@ -37,18 +46,6 @@ void UCodeRiffleAnim::PlayShootAnimation()
 
 void UCodeRiffleAnim::PersonaUpdate()
 {
-	if (FireAnimation != nullptr)
-	{
-		for (auto Notify : FireAnimation->Notifies)
-		{
-			if (Notify.NotifyName.ToString() == "ActionCompleted")
-			{
-				UE_LOG(Game, Warning, TEXT("Action completed Animation succesfull on CodeRiffleAnim.CPP line 59"));
-			}
-		}
-	}
-
-	DebugShoot = true;
 	if (DebugShoot)
 	{
 		DebugShoot = false;
@@ -58,7 +55,16 @@ void UCodeRiffleAnim::PersonaUpdate()
 
 void UCodeRiffleAnim::Shoot()
 {
-	DebugShoot = true;
+	if (CanShoot)
+	{
+		DebugShoot = true;
+		CanShoot = false;
+		// Set a timer to set CanShoot to true after 0.97 seconds
+		GetWorld()->GetTimerManager().SetTimer(CanShootTimerHandle, [this]()
+			{
+				CanShoot = true;
+			}, 0.97f, false);
+	}
 }
 
 

@@ -23,12 +23,14 @@ void ABaseCharacter::BeginPlay()
 
     if (WeaponClass)
     {
-        Weapon = GetWorld()->SpawnActor<ABaseWeaponRifle>(WeaponClass);
+        const FTransform orientationSocket = GetMesh()->GetSocketTransform("WeaponSocket", ERelativeTransformSpace::RTS_World);
+        Weapon = GetWorld()->SpawnActor<ABaseWeaponRifle>(WeaponClass, orientationSocket);
         if (Weapon)
         {
             Weapon->SetOwningPawn(this);
             //Atach to socket
-            Weapon->AttachToComponent(CharacterMesh, FAttachmentTransformRules::SnapToTargetIncludingScale, TEXT("WeaponSocket")); //WeaponSocket //pinky_01_l
+            FName socketName = "WeaponSocket";
+            Weapon->SkeletalMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
         }
     }
 }

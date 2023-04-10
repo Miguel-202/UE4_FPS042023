@@ -46,4 +46,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	TSubclassOf<AActor> Bullet;
 
+	UFUNCTION(BlueprintCallable, Category = "Shooting")
+	ABaseWeaponRifle* GetWeapon() { return Weapon; };
+
+
 };

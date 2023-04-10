@@ -11,13 +11,17 @@ ABaseProjectile::ABaseProjectile()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Collision = CreateDefaultSubobject<USphereComponent>(TEXT("Collision"));
-	SetRootComponent(Collision);
+	Collision->SetSphereRadius(10.f);
+	//SetRootComponent(Collision);
 	Collision->SetCollisionProfileName("Custom");
+	Collision->SetGenerateOverlapEvents(true);
 	Collision->OnComponentBeginOverlap.AddDynamic(this, &ABaseProjectile::HandleCollision);
+	RootComponent = Collision;
 
 	Mesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	Mesh->SetupAttachment(Collision);
-	Mesh->SetWorldScale3D(FVector(0.3f, 0.3f, 0.3f));
+	Mesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+	Mesh->SetCollisionProfileName("BlockAllDynamic");
 
 	Movement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Movement"));
 	Movement->InitialSpeed = 1800.0f;
@@ -30,7 +34,11 @@ ABaseProjectile::ABaseProjectile()
 void ABaseProjectile::BeginPlay()
 {
 	Super::BeginPlay();
-	
+	GetWorld()->GetTimerManager().SetTimer(TimerHandle_DestroyProjectile, [this]()
+		{
+			Destroy();
+		}, 3.f, false);
+	Mesh->SetWorldScale3D(FVector(.15f, .15f, .15f));
 }
 
 // Called every frame
@@ -40,9 +48,31 @@ void ABaseProjectile::Tick(float DeltaTime)
 
 }
 
-void ABaseProjectile::HandleCollision(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void ABaseProjectile::HandleCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	//Deal damage
+	if (OtherActor && OtherActor != this && OtherComponent)
+	{
+		// Check if the other actor is the owning pawn of the projectile
+		APawn* OwningPawn = Cast<APawn>(GetInstigator());
+		if (OwningPawn && OtherActor == OwningPawn)
+		{
+			// Ignore the collision with the owning pawn
+			return;
+		}
+		else
+		{
+			// Handle the collision with the other actor
+			 
+			// Destroy the projectile
+			DestroyProjectile();
+		}
+
+	}
+	
+}
+
+void ABaseProjectile::DestroyProjectile()
+{
 	Destroy();
 }
 

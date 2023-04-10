@@ -16,6 +16,9 @@ UCLASS()
 class FPS042023_API UCodeRiffleAnim : public UAnimInstance
 {
 	GENERATED_BODY()
+protected:
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere)
+	bool CanShoot = true;
 public:
 	void NativeUpdateAnimation(float DeltaSeconds) override;
 
@@ -37,5 +40,7 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void PersonaUpdate();
 	void Shoot();
+
+	FTimerHandle CanShootTimerHandle;
 	
 };

@@ -24,7 +24,6 @@ ABaseWeaponRifle::ABaseWeaponRifle()
 		UE_LOG(Game, Error, TEXT("We need a pawn to own this weapon"));
 	}*/
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
-	SkeletalMesh->SetupAttachment(GetRootComponent());
 
 }
 
@@ -49,7 +48,7 @@ void ABaseWeaponRifle::Shoot()
 		// Spawn the projectile at the location of the MuzzleFlashSocket
 		TSubclassOf<ABaseProjectile> Projectile = UBaseProjectile;
 		FVector SpawnLocation = SkeletalMesh->GetSocketLocation("MuzzleFlashSocket");
-		FRotator SpawnRotation = OwningPawn->GetActorRotation();
+		FRotator SpawnRotation = OwningPawn->GetController()->GetControlRotation();
 		FTransform SpawnTransform(SpawnRotation, SpawnLocation);
 		FActorSpawnParameters Params;
 		Params.Owner = OwningPawn->GetController();
@@ -57,7 +56,7 @@ void ABaseWeaponRifle::Shoot()
 		ABaseProjectile* SpawnedProjectile = GetWorld()->SpawnActor<ABaseProjectile>(Projectile, SpawnTransform, Params);
 		//ABaseProjectile* SpawnedProjectile = GetWorld()->SpawnActor<ABaseProjectile>(Projectile, SpawnLocation, SpawnRotation);
 
-		//Animating = true;
+		Animating = true;
 
 	}
 }

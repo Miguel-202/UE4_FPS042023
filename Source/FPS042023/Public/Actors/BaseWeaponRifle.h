@@ -37,7 +37,7 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	APawn* OwningPawn;
 
-	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Projectile")
+	UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Shoot")
 	TSubclassOf<ABaseProjectile> UBaseProjectile;
 
 
@@ -46,6 +46,7 @@ public:
 
 	UFUNCTION()
 	void Shoot();
+
 
 
 	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Delegates")
