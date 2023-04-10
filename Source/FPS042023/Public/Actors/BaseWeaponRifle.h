@@ -20,11 +20,12 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-	bool Animating = false;
+
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent);
 	bool CanShoot() { return !Animating; };
 
 public:	
+	bool Animating = false;
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

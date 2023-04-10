@@ -11,6 +11,10 @@ ABaseCharacter::ABaseCharacter()
 	GetMesh()->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
 	CharacterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
 	CharacterMesh->SetupAttachment(GetRootComponent());
+
+    CharacterMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
+
+    HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
 }
 
 // Called when the game starts or when spawned
@@ -43,14 +47,24 @@ void ABaseCharacter::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-}
+//void ABaseCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+//{
+//	Super::SetupPlayerInputComponent(PlayerInputComponent);
+//
+//}
 
 void ABaseCharacter::Shoot()
 {
     Weapon->Shoot();
     //Get CodeRifleAnim* from the CharacterMesh
+}
+
+float ABaseCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser)
+{
+    float ActualDamage = Super::TakeDamage(DamageAmount, DamageEvent, EventInstigator, DamageCauser);
+
+    // Broadcast the OnTakeAnyDamage event
+    OnTakeAnyDamage.Broadcast(nullptr, DamageAmount, nullptr, nullptr, nullptr);
+
+    return ActualDamage;
 }

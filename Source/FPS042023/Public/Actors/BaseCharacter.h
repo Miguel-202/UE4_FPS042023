@@ -18,6 +18,9 @@ public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
+	//Delegate 
+	//UPROPERTY(BlueprintAssignable, Category = "Events")
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -34,6 +37,10 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	class ABaseWeaponRifle* Weapon;
 
+	//Create health component
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
+	class UHealthComponent* HealthComponent;
+
 public:	
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	void Shoot();
@@ -41,13 +48,20 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	TSubclassOf<AActor> Bullet;
 
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	ABaseWeaponRifle* GetWeapon() { return Weapon; };
+
+	//take damage
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
+
+
+
 
 
 };

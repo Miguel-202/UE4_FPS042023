@@ -30,6 +30,12 @@ protected:
 	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
 	FTimerHandle TimerHandle_DestroyProjectile;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+		float DestroyDelay;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
+		float Damage;
+
 
 public:	
 	// Called every frame

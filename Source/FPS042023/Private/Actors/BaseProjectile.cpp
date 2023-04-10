@@ -4,6 +4,7 @@
 #include "Actors/BaseProjectile.h"
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Actors/BaseCharacter.h"
 
 // Sets default values
 ABaseProjectile::ABaseProjectile()
@@ -61,7 +62,12 @@ void ABaseProjectile::HandleCollision(UPrimitiveComponent* HitComponent, AActor*
 		}
 		else
 		{
-			// Handle the collision with the other actor
+			//Cast to the base character and do damage
+			ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(OtherActor);
+			if (BaseCharacter)
+			{
+				BaseCharacter->TakeDamage(Damage, FDamageEvent(), OwningPawn->GetController(), this);
+			}
 			 
 			// Destroy the projectile
 			DestroyProjectile();

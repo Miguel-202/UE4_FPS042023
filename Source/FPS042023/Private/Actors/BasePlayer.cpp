@@ -5,6 +5,9 @@
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
 
+#include "Blueprint/UserWidget.h"
+#include "Widgets/MyUserWidget.h"
+
 
 ABasePlayer::ABasePlayer()
 {
@@ -23,7 +26,17 @@ ABasePlayer::ABasePlayer()
     // Set the local rotation of the Camera in case of needed
     Camera->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
 
-    CharacterMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
+    
+}
+
+void ABasePlayer::BeginPlay()
+{
+	Super::BeginPlay();
+    if (WidgetClass != nullptr)
+    {
+        HUD = CreateWidget<UMyUserWidget>(Cast<APlayerController>(GetController()), WidgetClass);
+        HUD->AddToViewport();
+    }
 }
 
 void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent)
@@ -47,6 +60,9 @@ void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
     // Bind heal input
     //PlayerInputComponent->BindAction("Heal", IE_Pressed, this, &ABasePlayer::Heal);
 
+
+    //Bind the widget to the player
+    
 }
 
 void ABasePlayer::MoveForward(float AxisValue)
