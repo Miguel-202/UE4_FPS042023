@@ -4,25 +4,32 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "DelegatesHandlers/DelegateHandlerHealth.h"
 #include "MyUserWidget.generated.h"
 
-/**
- * 
- */
 UCLASS()
 class FPS042023_API UMyUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
-protected:
-	UMyUserWidget(const FObjectInitializer& ObjectInitializer);
 
+protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UProgressBar* HealthBar;
 
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* Reticle;
 public:
+	UMyUserWidget(const FObjectInitializer& ObjectInitializer);
+
+	//Delegate
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnUpdateHealth OnUpdateHealth;
+	//UPROPERTY()
+	//UDelegateHandlerHealth* DelegateHandler = NewObject<UDelegateHandlerHealth>();
+
+	UFUNCTION(BlueprintCallable)
+	void RunOnBeginPlay();
+
 	UFUNCTION(BlueprintCallable)
 	void SetHealthBarPercent(float Percent);
 

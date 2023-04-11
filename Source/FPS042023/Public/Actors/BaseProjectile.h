@@ -34,7 +34,7 @@ protected:
 		float DestroyDelay;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Projectile")
-		float Damage;
+		float Damage = 10;
 
 
 public:	

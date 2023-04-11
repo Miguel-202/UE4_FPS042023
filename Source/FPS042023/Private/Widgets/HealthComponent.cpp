@@ -3,8 +3,7 @@
 
 #include "Widgets/HealthComponent.h"
 #include "GameFramework/Actor.h"
-#include "Delegates/Delegate.h"
-//#include "Actor.h"
+
 
 
 // Sets default values for this component's properties
@@ -13,9 +12,8 @@ UHealthComponent::UHealthComponent()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
-	SetHealth(MaxHealth);
+	//SetHealth(MaxHealth);
+	MaxHealth = 100.0f;
 }
 
 
@@ -23,8 +21,9 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-
-	OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamageDel);
+	this->SetHealth(MaxHealth);
+	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamageDel);
+	//OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamageDel);
 	// ...
 	
 }
@@ -38,25 +37,32 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 	// ...
 }
 
-void UHealthComponent::SetHealth(float Health)
+void UHealthComponent::SetHealth(float NewHealth)
 {
-	CurrentHealth = Health;
-}
-
-void UHealthComponent::HandleDamage(float Damage)
-{
-	SetHealth(GetHealth() - Damage);
+	CurrentHealth = MaxHealth;
 }
 
 void UHealthComponent::HandleDamageDel(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	
-	SetHealth(GetHealth() - Damage);
-	if (GetHealth() <= 0)
+	
+	if (CurrentHealth > 0)
+	{
+		//SetHealth(0);
+		//DamagedActor->Destroy();
+		//OnUpdateHealth.Broadcast(CurrentHealth / MaxHealth);
+		CurrentHealth -= Damage;
+		OnUpdateHealth.Broadcast(CurrentHealth / MaxHealth);
+		//DelegateHandler->TakeOnDamageDelegate.Broadcast(CurrentHealth / MaxHealth);
+	}
+	else
 	{
 		SetHealth(0);
-		//DamagedActor->Destroy();
+		GetOwner()->OnTakeAnyDamage.RemoveDynamic(this, &UHealthComponent::HandleDamageDel);
+		OnUpdateHealth.Broadcast(CurrentHealth / MaxHealth);
+		//DelegateHandler->TakeOnDamageDelegate.Broadcast(CurrentHealth / MaxHealth);
 	}
 	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), GetHealth()));
+	
 }
 

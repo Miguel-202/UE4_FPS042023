@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/BaseCharacter.h"
-
+#include "Widgets/HealthComponent.h"
 
 #include "BasePlayer.generated.h"
 
@@ -46,5 +46,8 @@ public:
 	//Create a MyUserWidget visible on blueprint category HUD
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widgets")
 	class UMyUserWidget* HUD;
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateHealthBar(float HealthRatio);
 
 };

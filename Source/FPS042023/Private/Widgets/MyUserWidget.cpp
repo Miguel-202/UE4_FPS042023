@@ -5,11 +5,18 @@
 #include "Components/ProgressBar.h"
 #include "Components/Image.h"
 
+
 UMyUserWidget::UMyUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
-	// Set the widget to be non interactive
-	//SetIsFocusable(false);
-	//AddToViewport();
+	SetHealthBarPercent(1.0);
+}
+
+void UMyUserWidget::RunOnBeginPlay()
+{
+	//DelegateHandler->TakeOnDamageDelegate.AddDynamic(this, &UMyUserWidget::SetHealthBarPercent);
+	//TakeOnDamageDelegate.AddDynamic(this, &UMyUserWidget::SetHealthBarPercent);
+	AddToViewport();
+	OnUpdateHealth.AddDynamic(this, &UMyUserWidget::SetHealthBarPercent);
 }
 
 void UMyUserWidget::SetHealthBarPercent(float Percent)
@@ -35,5 +42,6 @@ void UMyUserWidget::NativeConstruct()
 	HealthBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HealthBar")));
 	Reticle = Cast<UImage>(GetWidgetFromName(TEXT("Reticle")));
 }
+
 
 

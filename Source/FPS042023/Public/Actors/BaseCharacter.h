@@ -9,6 +9,8 @@
 #include "GameFramework/Character.h"
 #include "BaseCharacter.generated.h"
 
+//DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTakeOnDamage1, float, Damage);
+
 UCLASS(Abstract)
 class FPS042023_API ABaseCharacter : public ACharacter
 {
@@ -18,8 +20,9 @@ public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
-	//Delegate 
-	//UPROPERTY(BlueprintAssignable, Category = "Events")
+	//Delegates
+	//UPROPERTY(BlueprintAssignable, Category = "Game|Damage")
+	//FTakeOnDamage1 OnTakeDamage;
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,18 +40,11 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	class ABaseWeaponRifle* Weapon;
 
-	//Create health component
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Health")
-	class UHealthComponent* HealthComponent;
-
 public:	
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	void Shoot();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	//virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	TSubclassOf<AActor> Bullet;
@@ -56,12 +52,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	ABaseWeaponRifle* GetWeapon() { return Weapon; };
 
-	//take damage
-	UFUNCTION(BlueprintCallable, Category = "Health")
-	virtual float TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, AController* EventInstigator, AActor* DamageCauser) override;
-
-
-
-
+	//Create health component
+	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
+	class UHealthComponent* HealthComponent;
 
 };

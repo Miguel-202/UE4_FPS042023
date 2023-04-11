@@ -25,8 +25,7 @@ ABasePlayer::ABasePlayer()
 
     // Set the local rotation of the Camera in case of needed
     Camera->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
-
-    
+    HealthComponent->OnUpdateHealth.AddDynamic(this, &ABasePlayer::UpdateHealthBar);
 }
 
 void ABasePlayer::BeginPlay()
@@ -35,7 +34,7 @@ void ABasePlayer::BeginPlay()
     if (WidgetClass != nullptr)
     {
         HUD = CreateWidget<UMyUserWidget>(Cast<APlayerController>(GetController()), WidgetClass);
-        HUD->AddToViewport();
+        HUD->RunOnBeginPlay();
     }
 }
 
@@ -60,7 +59,6 @@ void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
     // Bind heal input
     //PlayerInputComponent->BindAction("Heal", IE_Pressed, this, &ABasePlayer::Heal);
 
-
     //Bind the widget to the player
     
 }
@@ -77,4 +75,8 @@ void ABasePlayer::MoveRight(float AxisValue)
     AddMovementInput(MakeRotation.Vector(), AxisValue);
 }
 
+void ABasePlayer::UpdateHealthBar(float HealthRatio)
+{
+	HUD->SetHealthBarPercent(HealthRatio);
+}
 

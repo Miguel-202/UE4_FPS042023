@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Actors/BaseCharacter.h"
+#include <Kismet/GameplayStatics.h>
 
 // Sets default values
 ABaseProjectile::ABaseProjectile()
@@ -63,11 +64,7 @@ void ABaseProjectile::HandleCollision(UPrimitiveComponent* HitComponent, AActor*
 		else
 		{
 			//Cast to the base character and do damage
-			ABaseCharacter* BaseCharacter = Cast<ABaseCharacter>(OtherActor);
-			if (BaseCharacter)
-			{
-				BaseCharacter->TakeDamage(Damage, FDamageEvent(), OwningPawn->GetController(), this);
-			}
+			UGameplayStatics::ApplyDamage(OtherActor, Damage, GetInstigatorController(), GetInstigator(), UDamageType::StaticClass());
 			 
 			// Destroy the projectile
 			DestroyProjectile();
