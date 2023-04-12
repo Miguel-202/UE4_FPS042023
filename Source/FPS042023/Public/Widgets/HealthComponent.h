@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "DelegatesHandlers/DelegateHandlerHealth.h"
+#include "DelegatesHandlers/DelegateHandlerAnimations.h"
 #include "HealthComponent.generated.h"
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
@@ -20,6 +21,8 @@ public:
 	//UDelegateHandlerHealth* DelegateHandler = NewObject<UDelegateHandlerHealth>();
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnUpdateHealth OnUpdateHealth;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnCharacterDeath OnCharacterDeath;
 
 protected:
 	// Called when the game starts
@@ -33,6 +36,7 @@ protected:
 public:	
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	bool isAlive = true;
 
 	//function to set health
 	UFUNCTION(BlueprintCallable, Category = "Health")

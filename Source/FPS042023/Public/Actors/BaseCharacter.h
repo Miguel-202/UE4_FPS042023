@@ -4,6 +4,9 @@
 #include "BaseWeaponRifle.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/SkeletalMeshComponent.h"
+#include "Widgets/HealthComponent.h"
+#include "Delegates/Delegate.h"
+#include "CodeRiffleAnim.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -20,25 +23,18 @@ public:
 	// Sets default values for this character's properties
 	ABaseCharacter();
 
-	//Delegates
-	//UPROPERTY(BlueprintAssignable, Category = "Game|Damage")
-	//FTakeOnDamage1 OnTakeDamage;
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	class UStaticMeshComponent* CharacterMesh;
-
-	/*UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Components")
-	USkeletalMeshComponent* CharacterSkeletalMesh;*/
 
 	UPROPERTY(EditDefaultsOnly, Category = "Shooting")
 	TSubclassOf<ABaseWeaponRifle> WeaponClass;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	class ABaseWeaponRifle* Weapon;
+
+	UPROPERTY()
+	UCodeRiffleAnim* CodeRiffleAnimInstance;
 
 public:	
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
@@ -53,7 +49,6 @@ public:
 	ABaseWeaponRifle* GetWeapon() { return Weapon; };
 
 	//Create health component
-	UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Health")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	class UHealthComponent* HealthComponent;
-
 };

@@ -33,8 +33,12 @@ void ABasePlayer::BeginPlay()
 	Super::BeginPlay();
     if (WidgetClass != nullptr)
     {
-        HUD = CreateWidget<UMyUserWidget>(Cast<APlayerController>(GetController()), WidgetClass);
-        HUD->RunOnBeginPlay();
+        APlayerController* PlayerController = Cast<APlayerController>(GetController());
+        if (PlayerController != nullptr)
+        {
+            HUD = CreateWidget<UMyUserWidget>(PlayerController, WidgetClass);
+            HUD->RunOnBeginPlay();
+        }
     }
 }
 
@@ -65,8 +69,11 @@ void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 
 void ABasePlayer::MoveForward(float AxisValue)
 {
-    FRotator MakeRotation = FRotator(0.0f, GetControlRotation().Yaw, 0.0f);
-    AddMovementInput(MakeRotation.Vector(), AxisValue);
+    //if (HealthComponent->isAlive())
+    {
+        FRotator MakeRotation = FRotator(0.0f, GetControlRotation().Yaw, 0.0f);
+        AddMovementInput(MakeRotation.Vector(), AxisValue);
+    }
 }
 
 void ABasePlayer::MoveRight(float AxisValue)

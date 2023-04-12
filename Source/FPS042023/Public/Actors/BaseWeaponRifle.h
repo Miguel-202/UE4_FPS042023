@@ -22,10 +22,10 @@ protected:
 	virtual void BeginPlay() override;
 
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent);
-	bool CanShoot() { return !Animating; };
 
 public:	
 	bool Animating = false;
+	bool CanShoot() { return !Animating; };
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

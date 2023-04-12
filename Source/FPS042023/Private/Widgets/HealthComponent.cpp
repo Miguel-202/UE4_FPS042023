@@ -11,9 +11,10 @@ UHealthComponent::UHealthComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 	//SetHealth(MaxHealth);
 	MaxHealth = 100.0f;
+	CurrentHealth = MaxHealth;
 }
 
 
@@ -21,7 +22,6 @@ UHealthComponent::UHealthComponent()
 void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	this->SetHealth(MaxHealth);
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamageDel);
 	//OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamageDel);
 	// ...
@@ -39,30 +39,31 @@ void UHealthComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 
 void UHealthComponent::SetHealth(float NewHealth)
 {
-	CurrentHealth = MaxHealth;
+	CurrentHealth = NewHealth;
 }
 
 void UHealthComponent::HandleDamageDel(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser)
 {
 	
-	
-	if (CurrentHealth > 0)
+	if (isAlive)
 	{
-		//SetHealth(0);
-		//DamagedActor->Destroy();
-		//OnUpdateHealth.Broadcast(CurrentHealth / MaxHealth);
-		CurrentHealth -= Damage;
-		OnUpdateHealth.Broadcast(CurrentHealth / MaxHealth);
-		//DelegateHandler->TakeOnDamageDelegate.Broadcast(CurrentHealth / MaxHealth);
+		if (CurrentHealth > 0)
+		{
+			CurrentHealth -= Damage;
+			OnUpdateHealth.Broadcast(CurrentHealth / MaxHealth);
+
+			//If the player health gets to 0 during this shoot, it won't need to wait until the next shoot to die, it will die immediately
+			if (CurrentHealth <= 0)
+			{
+				CurrentHealth = 0;
+				GetOwner()->OnTakeAnyDamage.RemoveDynamic(this, &UHealthComponent::HandleDamageDel);
+				OnUpdateHealth.Broadcast(CurrentHealth / MaxHealth);
+				OnCharacterDeath.Broadcast();
+				isAlive = false;
+			}
+		}
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), GetHealth()));
 	}
-	else
-	{
-		SetHealth(0);
-		GetOwner()->OnTakeAnyDamage.RemoveDynamic(this, &UHealthComponent::HandleDamageDel);
-		OnUpdateHealth.Broadcast(CurrentHealth / MaxHealth);
-		//DelegateHandler->TakeOnDamageDelegate.Broadcast(CurrentHealth / MaxHealth);
-	}
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), GetHealth()));
 	
 }
 

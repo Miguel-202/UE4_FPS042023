@@ -2,28 +2,38 @@
 
 
 #include "Actors/BaseCharacter.h"
-#include "Widgets/HealthComponent.h"
-#include "Delegates/Delegate.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
 {
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GetMesh()->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
-	CharacterMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh"));
-	CharacterMesh->SetupAttachment(GetRootComponent());
+    USkeletalMeshComponent* SkeletalMeshComponent = GetMesh();
+    SkeletalMeshComponent->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
     Weapon = nullptr;
 
-    CharacterMesh->SetRelativeLocation(FVector(0.0f, 0.0f, -90.0f));
     
     HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
+    
+    
+
 }
 
 // Called when the game starts or when spawned
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    CodeRiffleAnimInstance = Cast<UCodeRiffleAnim>(AnimInstance);
+    if (nullptr != HealthComponent && nullptr != CodeRiffleAnimInstance)
+    {
+        HealthComponent->OnCharacterDeath.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayDeathAnimation);
+        CodeRiffleAnimInstance->OnCharacterShoot.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::SetDebugShootTrue);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("HealthComponent or CodeRiffleAnimInstance is nullptr"));
+    }
 
     if (WeaponClass)
     {
@@ -47,7 +57,10 @@ void ABaseCharacter::Tick(float DeltaTime)
 
 void ABaseCharacter::Shoot()
 {
-    Weapon->Shoot();
-    //Get CodeRifleAnim* from the CharacterMesh
+    if (Weapon->CanShoot() && HealthComponent->isAlive)
+    {
+        Weapon->Shoot();
+        CodeRiffleAnimInstance->OnCharacterShoot.Broadcast();
+    }
 }
 

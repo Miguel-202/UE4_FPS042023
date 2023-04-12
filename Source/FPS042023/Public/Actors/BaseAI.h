@@ -24,6 +24,7 @@ public:
 protected:
 	void Tick(float DeltaTime);
 
-	float TimeSinceLastShot = 0.0f;
-	float TimeBetweenShots = 1.0f;
+private:
+	float TimeSinceLastShot;
+	float TimeBetweenShots;
 };

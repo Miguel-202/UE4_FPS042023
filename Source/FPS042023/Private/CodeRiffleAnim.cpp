@@ -5,7 +5,6 @@
 #include "../../FPS042023/FPS042023.h"
 #include "Animation/AnimSequence.h"
 
-
 void UCodeRiffleAnim::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
@@ -19,20 +18,11 @@ void UCodeRiffleAnim::NativeUpdateAnimation(float DeltaSeconds)
 		// Calculate the direction of the pawn's movement and store it in the Direction variable
 		Direction = CalculateDirection(Velocity, Pawn->GetActorRotation());
 
-		// Get the input component from the pawn
-		UInputComponent* InputComponent = Pawn->FindComponentByClass<UInputComponent>();
-
-		// Bind the "shoot" action to the Shoot function of UCodeRiffleAnim
-		if (InputComponent)
-		{
-			InputComponent->BindAction("shoot", IE_Pressed, this, &UCodeRiffleAnim::Shoot);
-		}
-
 		PersonaUpdate();
 	}
 	else
 	{
-		UE_LOG(LogTemp, Warning, TEXT("File does not exist!"));
+		UE_LOG(LogTemp, Error, TEXT("No Owning Pawn for Animation"));
 	}
 }
 
@@ -40,8 +30,35 @@ void UCodeRiffleAnim::PlayShootAnimation()
 {
 	if (FireAnimation != nullptr)
 	{
-		PlaySlotAnimation(FireAnimation, "Action", 0.25f, 0.25f, 1.0f, 1);
+		PlaySlotAnimationAsDynamicMontage(FireAnimation, "Action", 0.25f, 0.25f, 1.0f, 1);
 	}
+}
+
+void UCodeRiffleAnim::PlayDeathAnimation()
+{
+	if (DebugDeath == false)
+	{
+		bool arrayIsValild = true;
+		for (int i = 0; i < DeathAnimations.Num(); i++)
+		{
+			if (DeathAnimations[i] == nullptr)
+			{
+				arrayIsValild = false;
+				break;
+			}
+		}
+		if (arrayIsValild)
+		{
+			int random = FMath::RandRange(0, (DeathAnimations.Num() - 1));
+			CurrentDeathAnimation = DeathAnimations[random];
+			DebugDeath = true;
+		}
+	}
+}
+
+void UCodeRiffleAnim::SetDebugShootTrue()
+{
+	DebugShoot = true;
 }
 
 void UCodeRiffleAnim::PersonaUpdate()
@@ -53,17 +70,22 @@ void UCodeRiffleAnim::PersonaUpdate()
 	}
 }
 
+
 void UCodeRiffleAnim::Shoot()
 {
-	if (CanShoot)
+	if (this != nullptr)
 	{
-		DebugShoot = true;
-		CanShoot = false;
-		// Set a timer to set CanShoot to true after 0.97 seconds
-		GetWorld()->GetTimerManager().SetTimer(CanShootTimerHandle, [this]()
-			{
-				CanShoot = true;
-			}, 0.97f, false);
+		if (CanShoot)
+		{
+			PlayShootAnimation();
+			DebugShoot = true;
+			CanShoot = false;
+			// Set a timer to set CanShoot to true after 0.97 seconds
+			GetWorld()->GetTimerManager().SetTimer(CanShootTimerHandle, [this]()
+				{
+					CanShoot = true;
+				}, 0.97f, false);
+		}
 	}
 }
 

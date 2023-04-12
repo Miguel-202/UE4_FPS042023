@@ -4,8 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Actors/BaseCharacter.h"
-#include "Widgets/HealthComponent.h"
-
 #include "BasePlayer.generated.h"
 
 /**
@@ -25,13 +23,6 @@ protected:
 
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
-
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
-	//UMyUserWidget* HUD;
-
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
-	//TSubclassOf<class UMyUserWidget> WidgetClass;
 	
 public:
 	ABasePlayer();
