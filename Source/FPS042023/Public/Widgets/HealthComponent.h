@@ -23,6 +23,8 @@ public:
 	FOnUpdateHealth OnUpdateHealth;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnCharacterDeath OnCharacterDeath;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnCharacterHurt OnCharacterHurt;
 
 protected:
 	// Called when the game starts

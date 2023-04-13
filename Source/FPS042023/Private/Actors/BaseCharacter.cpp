@@ -2,6 +2,7 @@
 
 
 #include "Actors/BaseCharacter.h"
+#include "Components/CapsuleComponent.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -28,6 +29,9 @@ void ABaseCharacter::BeginPlay()
     if (nullptr != HealthComponent && nullptr != CodeRiffleAnimInstance)
     {
         HealthComponent->OnCharacterDeath.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayDeathAnimation);
+        HealthComponent->OnCharacterDeath.AddDynamic(this, &ABaseCharacter::CharacterDeath);
+        HealthComponent->OnCharacterHurt.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayHurtAnimation);
+
         CodeRiffleAnimInstance->OnCharacterShoot.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::SetDebugShootTrue);
     }
     else
@@ -53,6 +57,12 @@ void ABaseCharacter::BeginPlay()
 void ABaseCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+}
+
+void ABaseCharacter::CharacterDeath()
+{
+    //Disable collision
+    GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 void ABaseCharacter::Shoot()

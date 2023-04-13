@@ -45,6 +45,8 @@ public:
 	TArray<UAnimSequence*> DeathAnimations;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UAnimSequence* CurrentDeathAnimation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAnimSequence* HurtAnimation;
 
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void SetDebugShootTrue();
@@ -53,6 +55,8 @@ public:
 	void PlayShootAnimation();
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void PlayDeathAnimation();
+	UFUNCTION(BlueprintCallable, Category = "Animations")
+	void PlayHurtAnimation();
 
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void PersonaUpdate();

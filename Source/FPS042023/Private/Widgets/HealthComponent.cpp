@@ -61,6 +61,10 @@ void UHealthComponent::HandleDamageDel(AActor* DamagedActor, float Damage, const
 				OnCharacterDeath.Broadcast();
 				isAlive = false;
 			}
+			else
+			{
+				OnCharacterHurt.Broadcast();
+			}
 		}
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), GetHealth()));
 	}

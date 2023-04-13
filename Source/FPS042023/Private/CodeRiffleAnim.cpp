@@ -56,6 +56,14 @@ void UCodeRiffleAnim::PlayDeathAnimation()
 	}
 }
 
+void UCodeRiffleAnim::PlayHurtAnimation()
+{
+	if (HurtAnimation != nullptr)
+	{
+		PlaySlotAnimationAsDynamicMontage(HurtAnimation, "Damage", 0.25f, 0.25f, 1.0f, 1);
+	}
+}
+
 void UCodeRiffleAnim::SetDebugShootTrue()
 {
 	DebugShoot = true;

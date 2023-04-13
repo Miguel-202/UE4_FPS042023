@@ -87,3 +87,10 @@ void ABasePlayer::UpdateHealthBar(float HealthRatio)
 	HUD->SetHealthBarPercent(HealthRatio);
 }
 
+void ABasePlayer::CharacterDeath()
+{
+	HUD->SetVisibility(ESlateVisibility::Hidden);
+    DisableInput(Cast<APlayerController>(GetController()));
+    Super::CharacterDeath();
+}
+

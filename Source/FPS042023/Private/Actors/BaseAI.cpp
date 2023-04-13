@@ -8,6 +8,8 @@ ABaseAI::ABaseAI() : ABaseCharacter()
 {
 	TimeBetweenShots = 1.0f;
 	TimeSinceLastShot = 0.0f;
+    Tags.Empty();
+    Tags.Add("Enemy");
 }
 
 void ABaseAI::BeginPlay()

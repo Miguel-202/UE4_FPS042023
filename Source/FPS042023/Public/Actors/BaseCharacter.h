@@ -51,4 +51,7 @@ public:
 	//Create health component
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Health")
 	class UHealthComponent* HealthComponent;
+
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	virtual void CharacterDeath();
 };

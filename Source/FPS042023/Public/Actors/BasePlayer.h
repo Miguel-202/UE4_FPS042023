@@ -41,4 +41,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateHealthBar(float HealthRatio);
 
+	//Override the function from BaseCharacter
+	virtual void CharacterDeath() override;
+
 };

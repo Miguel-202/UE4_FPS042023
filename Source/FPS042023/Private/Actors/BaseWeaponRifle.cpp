@@ -9,6 +9,9 @@
 #include "CodeRiffleAnim.h"
 #include "Components/StaticMeshComponent.h"
 #include "Actors/BaseCharacter.h"
+#include "Widgets/MyUserWidget.h"
+#include "Blueprint/WidgetBlueprintLibrary.h"
+#include <Kismet/KismetMathLibrary.h>
 
 
 //DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEventDispatcher, AActor*, ParamName);
@@ -48,7 +51,7 @@ void ABaseWeaponRifle::Shoot()
 		// Spawn the projectile at the location of the MuzzleFlashSocket
 		TSubclassOf<ABaseProjectile> Projectile = UBaseProjectile;
 		FVector SpawnLocation = SkeletalMesh->GetSocketLocation("MuzzleFlashSocket");
-		FRotator SpawnRotation = OwningPawn->GetController()->GetControlRotation();
+		FRotator SpawnRotation = GetShootRotation();
 		FTransform SpawnTransform(SpawnRotation, SpawnLocation);
 		FActorSpawnParameters Params;
 		Params.Owner = OwningPawn->GetController();
@@ -69,6 +72,43 @@ void ABaseWeaponRifle::SetOwningPawn(APawn* NewOwningPawn)
 void ABaseWeaponRifle::OnAnimationCompleted()
 {
 	Animating = false;
+}
+
+FRotator ABaseWeaponRifle::GetShootRotation()
+{
+	FRotator ShootRotation = OwningPawn->GetController()->GetControlRotation();
+	TArray<UUserWidget*> FoundWidgets;
+	UWidgetBlueprintLibrary::GetAllWidgetsOfClass(GetWorld(), FoundWidgets, UMyUserWidget::StaticClass(), false);
+	if (FoundWidgets.Num() > 0)
+	{
+		for (UUserWidget* Widget : FoundWidgets)
+		{
+			UMyUserWidget* MyWidget = Cast<UMyUserWidget>(Widget);
+			if (MyWidget->GetOwningPlayerPawn() == OwningPawn)
+			{
+				FVector AimedPoint; FVector EndPoint; bool Hit; FVector Destination;
+				MyWidget->GetAimedPoint(AimedPoint, EndPoint, Hit);
+				if (Hit)
+				{
+					Destination = AimedPoint;
+				}
+				else
+				{
+					Destination = EndPoint;
+				}
+				ShootRotation = ShootRotation = UKismetMathLibrary::MakeRotFromX(Destination - SkeletalMesh->GetSocketLocation("MuzzleFlashSocket"));
+			}
+			else
+			{
+				ShootRotation = OwningPawn->GetController()->GetControlRotation();
+			}
+		}
+	}
+	else
+	{
+		ShootRotation = OwningPawn->GetController()->GetControlRotation();
+	}
+	return ShootRotation;
 }
 
 void ABaseWeaponRifle::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)

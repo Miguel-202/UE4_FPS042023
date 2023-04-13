@@ -23,6 +23,10 @@ protected:
 
 	void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent);
 
+	UFUNCTION(BlueprintCallable, Category = "Shooting")
+	FRotator GetShootRotation();
+
+
 public:	
 	bool Animating = false;
 	bool CanShoot() { return !Animating; };

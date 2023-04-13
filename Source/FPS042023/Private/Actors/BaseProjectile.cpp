@@ -29,6 +29,7 @@ ABaseProjectile::ABaseProjectile()
 	Movement->InitialSpeed = 1800.0f;
 	Movement->MaxSpeed = 2000.0f;
 	Movement->ProjectileGravityScale = 0.0f;
+	Damage = 50.0f;
 	//Movement->bRotationFollowsVelocity = true;
 }
 
