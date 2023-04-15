@@ -2,12 +2,12 @@
 
 
 #include "Actors/BaseAI.h"
+#include "Interfaces/ShooterInterface.h"
 
 //Set the tick to true and create the tick function
 ABaseAI::ABaseAI() : ABaseCharacter()
 {
-	TimeBetweenShots = 1.0f;
-	TimeSinceLastShot = 0.0f;
+    PrimaryActorTick.bCanEverTick = false;
     Tags.Empty();
     Tags.Add("Enemy");
 }
@@ -17,10 +17,10 @@ void ABaseAI::BeginPlay()
     Super::BeginPlay();
 }
 
-void ABaseAI::Tick(float DeltaTime)
+void ABaseAI::ShootInterface()
 {
-    Super::Tick(DeltaTime);
-    Shoot();
-    // Do something here every tick
+    Super::Shoot(); 
 }
+
+
 

@@ -4,13 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "Actors/BaseCharacter.h"
+#include "BehaviorTree/BehaviorTreeComponent.h"
+#include "BehaviorTree/BehaviorTree.h"
+#include "Interfaces/ShooterInterface.h"
 #include "BaseAI.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class FPS042023_API ABaseAI : public ABaseCharacter
+class FPS042023_API ABaseAI : public ABaseCharacter, public IShooterInterface
 {
 	GENERATED_BODY()
 	
@@ -18,13 +21,12 @@ public:
 	ABaseAI();
 	void BeginPlay() override;
 
-	//UFUNCTION(BlueprintCallable, Category = "Shooting")
-		//void Shoot();
+	virtual void ShootInterface() override;
+
+	//behavior tree component
+	UPROPERTY(EditAnywhere, Category = "AI")
+	class UBehaviorTree* BehaviorTree;
 
 protected:
-	void Tick(float DeltaTime);
-
-private:
-	float TimeSinceLastShot;
-	float TimeBetweenShots;
 };
+
