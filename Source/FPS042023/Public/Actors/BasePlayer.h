@@ -33,10 +33,13 @@ public:
 	//Create WidgetClass
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
 	TSubclassOf<class UMyUserWidget> WidgetClass;
-
-	//Create a MyUserWidget visible on blueprint category HUD
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widgets")
 	class UMyUserWidget* HUD;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widgets")
+	TSubclassOf<class UResultsWidget> EndWidgetClass;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Widgets")
+	class UResultsWidget* EndScreen;
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateHealthBar(float HealthRatio);

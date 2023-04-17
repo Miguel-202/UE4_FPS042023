@@ -22,6 +22,8 @@ public:
 	void BeginPlay() override;
 
 	virtual void ShootInterface() override;
+	UFUNCTION()
+	void AIDeath();
 
 	//behavior tree component
 	UPROPERTY(EditAnywhere, Category = "AI")

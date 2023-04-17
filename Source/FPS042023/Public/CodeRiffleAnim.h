@@ -24,7 +24,8 @@ public:
 	//DELEGATE
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnCharacterShoot OnCharacterShoot;
-
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnCharacterDeath OnCharacterDeath;
 
 
 	void NativeUpdateAnimation(float DeltaSeconds) override;
@@ -63,5 +64,6 @@ public:
 	void Shoot();
 
 	FTimerHandle CanShootTimerHandle;
+	FTimerHandle DeathTimerHandle;
 	
 };

@@ -4,7 +4,7 @@
 #include "Actors/BasePlayer.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
-
+#include "Widgets/ResultsWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Widgets/MyUserWidget.h"
 
@@ -26,11 +26,16 @@ ABasePlayer::ABasePlayer()
     // Set the local rotation of the Camera in case of needed
     Camera->SetRelativeRotation(FRotator(0.0f, 0.0f, 0.0f));
     HealthComponent->OnUpdateHealth.AddDynamic(this, &ABasePlayer::UpdateHealthBar);
+
+    //UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    //CodeRiffleAnimInstance = Cast<UCodeRiffleAnim>(AnimInstance);
 }
 
 void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
+    //CodeRiffleAnimInstance->OnCharacterDeath.AddDynamic(this, &ABasePlayer::CharacterDeath);
+
     if (WidgetClass != nullptr)
     {
         APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -62,8 +67,6 @@ void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 
     // Bind heal input
     //PlayerInputComponent->BindAction("Heal", IE_Pressed, this, &ABasePlayer::Heal);
-
-    //Bind the widget to the player
     
 }
 
@@ -92,5 +95,16 @@ void ABasePlayer::CharacterDeath()
 	HUD->SetVisibility(ESlateVisibility::Hidden);
     DisableInput(Cast<APlayerController>(GetController()));
     Super::CharacterDeath();
+
+    APlayerController* PlayerController = Cast<APlayerController>(GetController());
+    if (PlayerController != nullptr)
+    {
+        EndScreen = CreateWidget<UResultsWidget>(PlayerController, EndWidgetClass);
+        EndScreen->SetLoseResults();
+        EndScreen->AddToViewport();
+        //enable mouse
+        PlayerController->bShowMouseCursor = true;
+        PlayerController->bEnableClickEvents = true;
+    }
 }
 

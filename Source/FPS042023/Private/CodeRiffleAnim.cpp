@@ -52,6 +52,11 @@ void UCodeRiffleAnim::PlayDeathAnimation()
 			int random = FMath::RandRange(0, (DeathAnimations.Num() - 1));
 			CurrentDeathAnimation = DeathAnimations[random];
 			DebugDeath = true;
+			//Wait for one second then broadcast the event
+			GetWorld()->GetTimerManager().SetTimer(DeathTimerHandle, [this]()
+				{
+					OnCharacterDeath.Broadcast();
+				}, 1.0f, false);
 		}
 	}
 }

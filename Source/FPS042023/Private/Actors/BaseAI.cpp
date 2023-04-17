@@ -10,11 +10,14 @@ ABaseAI::ABaseAI() : ABaseCharacter()
     PrimaryActorTick.bCanEverTick = false;
     Tags.Empty();
     Tags.Add("Enemy");
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    CodeRiffleAnimInstance = Cast<UCodeRiffleAnim>(AnimInstance);
 }
 
 void ABaseAI::BeginPlay()
 {
     Super::BeginPlay();
+    CodeRiffleAnimInstance->OnCharacterDeath.AddDynamic(this, &ABaseAI::AIDeath);
 }
 
 void ABaseAI::ShootInterface()
@@ -22,5 +25,17 @@ void ABaseAI::ShootInterface()
     Super::Shoot(); 
 }
 
+//Ai death count
+void ABaseAI::AIDeath()
+{
+    //stop ai logic
+    UBehaviorTreeComponent* BehaviorTreeComponent = FindComponentByClass<UBehaviorTreeComponent>();
+    if (BehaviorTreeComponent)
+    {
+		BehaviorTreeComponent->StopTree(EBTStopMode::Safe);
+	} 
+    OnDestroyed.Broadcast(this);
+    Destroy();
+}
 
 
