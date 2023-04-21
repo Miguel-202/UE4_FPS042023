@@ -8,6 +8,9 @@ UEND_GameInstance::UEND_GameInstance(const FObjectInitializer& ObjectInitializer
 {
 	LevelNames.Add("FirstLevel");
 	LevelNames.Add("MainMenu");
+
+    NatureLevelIndex = 0;
+    MainMenuLevelIndex = 1;
 }
 
 void UEND_GameInstance::Init()
@@ -22,13 +25,28 @@ void UEND_GameInstance::Shutdown()
 
 void UEND_GameInstance::LoadFirstLevel()
 {
-	UGameplayStatics::OpenLevel(this, FName(LevelNames[NatureLevelIndex]), true);
+    if (NatureLevelIndex >= 0 && NatureLevelIndex < LevelNames.Num())
+    {
+        UGameplayStatics::OpenLevel(this, FName(LevelNames[NatureLevelIndex]), true);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Invalid NatureLevelIndex value"));
+    }
 }
 
 void UEND_GameInstance::LoadMainMenu()
 {
-	UGameplayStatics::OpenLevel(this, FName(LevelNames[MainMenuLevelIndex]), true);
+    if (MainMenuLevelIndex >= 0 && MainMenuLevelIndex < LevelNames.Num())
+    {
+        UGameplayStatics::OpenLevel(this, FName(LevelNames[MainMenuLevelIndex]), true);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Invalid MainMenuLevelIndex value"));
+    }
 }
+
 
 void UEND_GameInstance::QuitGame()
 {

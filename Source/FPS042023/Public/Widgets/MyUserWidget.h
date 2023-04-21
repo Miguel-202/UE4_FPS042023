@@ -15,15 +15,22 @@ class FPS042023_API UMyUserWidget : public UUserWidget
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UProgressBar* HealthBar;
-
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UImage* Reticle;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UImage* WeaponIcon;
+	//text for current ammo and max ammo
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* CurrentAmmoText;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UTextBlock* MaxAmmoText;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
 	UMaterialInstanceDynamic* DynamicReticleMaterial;
 
 public:
 	UMyUserWidget(const FObjectInitializer& ObjectInitializer);
+	~UMyUserWidget();
 
 	virtual void NativeTick(const FGeometry& MyGeometry, float InDeltaTime) override;
 
@@ -51,6 +58,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void GetAimedPoint(FVector& HitLocation, FVector& EndPoint, bool& IsHitValid);
 
+	UFUNCTION(BlueprintCallable)
+	void SetAmmoText(float CurrentAmmo, float MaxAmmo);
+
 
 private:
 	//Colors
@@ -66,4 +76,6 @@ private:
 	FVector HitScanEnd;
 	UPROPERTY(EditAnywhere, Category = "HitScan")
 	FVector HitScanLocation;
+
+	FName ColorParamName = FName("Color");
 };

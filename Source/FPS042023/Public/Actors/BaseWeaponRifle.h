@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "DelegatesHandlers/DelegateHandlerAmmo.h"
 #include "BaseWeaponRifle.generated.h"
 
 UCLASS()
@@ -17,6 +18,15 @@ public:
 	// Sets default values for this actor's properties
 	ABaseWeaponRifle();		
 
+	//delegate for reloading
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnAmmoChange AmmoChangeDelegate;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnStartReload StartReloadDelegate;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnCharacterActionEnded CharacterActionEndedDelegate;
+
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -26,10 +36,18 @@ protected:
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	FRotator GetShootRotation();
 
-
 public:	
+	//Create variables for reload information
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+		float CurrentAmmo;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+		float MaxAmmo;
+
+
 	bool Animating = false;
-	bool CanShoot() { return !Animating; };
+	bool CanShoot();
+	UFUNCTION(BlueprintCallable, Category = "Shooting")
+	bool CanReload();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -49,15 +67,15 @@ public:
 	UPROPERTY(VisibleAnywhere, BlueprintReadonly)
 	USkeletalMeshComponent* SkeletalMesh;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
+	float reloadTime = 1.73;
+
 	UFUNCTION()
 	void Shoot();
 
+	UFUNCTION(BlueprintCallable, Category = "Shooting")
+	virtual void Reload();
 
-
-	//UPROPERTY(BlueprintReadWrite, EditAnywhere, Category = "Delegates")
-	//FOnShoot OnShoot; // Delegate to handle shooting
-	// Function to handle shooting
-
-
-	
+	UFUNCTION(BlueprintCallable, Category = "Shooting")
+	virtual void UseAmmo();
 };

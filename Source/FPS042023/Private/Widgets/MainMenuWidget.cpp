@@ -21,6 +21,11 @@ UMainMenuWidget::UMainMenuWidget(const FObjectInitializer& ObjectInitializer) : 
     }
 }
 
+UMainMenuWidget::~UMainMenuWidget()
+{
+    RemoveFromParent();
+}
+
 void UMainMenuWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();
@@ -57,6 +62,7 @@ void UMainMenuWidget::QuitGame()
     UE_LOG(LogTemp, Warning, TEXT("QuitGame() called"));
     if (GameInstance != nullptr)
     {
+        this->RemoveFromParent();
         GameInstance->QuitGame();
     }
 }

@@ -18,6 +18,7 @@ class FPS042023_API UResultsWidget : public UUserWidget
 
 public:
 	UResultsWidget(const FObjectInitializer& ObjectInitializer);
+	~UResultsWidget();
 	virtual void NativePreConstruct() override;
 
 	UPROPERTY(meta = (BindWidget))

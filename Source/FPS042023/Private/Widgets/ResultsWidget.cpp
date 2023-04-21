@@ -18,6 +18,11 @@ UResultsWidget::UResultsWidget(const FObjectInitializer& ObjectInitializer) : Su
 
 }
 
+UResultsWidget::~UResultsWidget()
+{
+	RemoveFromParent();
+}
+
 void UResultsWidget::NativePreConstruct()
 {
 	Super::NativePreConstruct();

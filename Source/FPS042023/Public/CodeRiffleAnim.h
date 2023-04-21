@@ -39,6 +39,8 @@ public:
 	bool DebugShoot;
 	UPROPERTY(BlueprintReadWrite, EditAnywhere)
 	bool DebugDeath;
+	UPROPERTY(BlueprintReadWrite, EditAnywhere)
+	bool DebugReload;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UAnimSequence* FireAnimation;
@@ -48,6 +50,8 @@ public:
 	class UAnimSequence* CurrentDeathAnimation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UAnimSequence* HurtAnimation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAnimSequence* ReloadAnimation;
 
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void SetDebugShootTrue();
@@ -58,6 +62,9 @@ public:
 	void PlayDeathAnimation();
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void PlayHurtAnimation();
+	//play reload animation
+	UFUNCTION(BlueprintCallable, Category = "Animations")
+	void PlayReloadAnimation();
 
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void PersonaUpdate();

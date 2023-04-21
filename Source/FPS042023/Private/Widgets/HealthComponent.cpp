@@ -23,9 +23,6 @@ void UHealthComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	GetOwner()->OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamageDel);
-	//OnTakeAnyDamage.AddDynamic(this, &UHealthComponent::HandleDamageDel);
-	// ...
-	
 }
 
 
@@ -66,7 +63,6 @@ void UHealthComponent::HandleDamageDel(AActor* DamagedActor, float Damage, const
 				OnCharacterHurt.Broadcast();
 			}
 		}
-		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Current Health: %f"), GetHealth()));
 	}
 	
 }

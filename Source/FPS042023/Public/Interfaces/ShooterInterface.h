@@ -24,4 +24,6 @@ class FPS042023_API IShooterInterface
 public:
 	UFUNCTION(BlueprintCallable)
 	virtual void ShootInterface() = 0;
+	UFUNCTION(BlueprintCallable)
+	virtual void ReloadInterface() = 0;
 };

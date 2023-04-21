@@ -22,6 +22,7 @@ public:
 	void BeginPlay() override;
 
 	virtual void ShootInterface() override;
+	virtual void ReloadInterface() override;
 	UFUNCTION()
 	void AIDeath();
 
@@ -29,6 +30,14 @@ public:
 	UPROPERTY(EditAnywhere, Category = "AI")
 	class UBehaviorTree* BehaviorTree;
 
+	UPROPERTY(EditAnywhere, Category = "AI")
+	class UBehaviorTreeComponent* BehaviorTreeComponent;
+
+	virtual void AmmoChange(float CurrentAmmo, float MaxAmmo) override;
+
+	virtual void ActionEnded() override;
+
 protected:
+	FName MessageName;
 };
 

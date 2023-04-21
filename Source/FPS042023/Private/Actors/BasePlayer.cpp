@@ -35,7 +35,6 @@ void ABasePlayer::BeginPlay()
 {
 	Super::BeginPlay();
     //CodeRiffleAnimInstance->OnCharacterDeath.AddDynamic(this, &ABasePlayer::CharacterDeath);
-
     if (WidgetClass != nullptr)
     {
         APlayerController* PlayerController = Cast<APlayerController>(GetController());
@@ -43,6 +42,8 @@ void ABasePlayer::BeginPlay()
         {
             HUD = CreateWidget<UMyUserWidget>(PlayerController, WidgetClass);
             HUD->RunOnBeginPlay();
+            if (Weapon != nullptr)
+                Weapon->Reload();
         }
     }
 }
@@ -65,6 +66,9 @@ void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
     // Bind fire input
     PlayerInputComponent->BindAction("Shoot", IE_Pressed, this, &ABaseCharacter::Shoot);
 
+    // Bind reload input
+    PlayerInputComponent->BindAction("Reload", IE_Pressed, this, &ABaseCharacter::Reload);
+
     // Bind heal input
     //PlayerInputComponent->BindAction("Heal", IE_Pressed, this, &ABasePlayer::Heal);
     
@@ -83,6 +87,12 @@ void ABasePlayer::MoveRight(float AxisValue)
 {
     FRotator MakeRotation = FRotator(0.0f, GetControlRotation().Yaw + 90.0f, 0.0f);
     AddMovementInput(MakeRotation.Vector(), AxisValue);
+}
+
+void ABasePlayer::AmmoChange(float CurrentAmmo, float MaxAmmo)
+{
+    Super::AmmoChange(CurrentAmmo, MaxAmmo);
+    HUD->SetAmmoText(CurrentAmmo, MaxAmmo);
 }
 
 void ABasePlayer::UpdateHealthBar(float HealthRatio)
@@ -107,4 +117,3 @@ void ABasePlayer::CharacterDeath()
         PlayerController->bEnableClickEvents = true;
     }
 }
-

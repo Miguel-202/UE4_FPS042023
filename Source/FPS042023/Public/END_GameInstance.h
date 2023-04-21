@@ -32,7 +32,7 @@ protected:
 	TArray<FString> LevelNames;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
-	int32 NatureLevelIndex = 0;
+	int32 NatureLevelIndex;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "GameInstance")
-	int32 MainMenuLevelIndex = 1;
+	int32 MainMenuLevelIndex;
 };

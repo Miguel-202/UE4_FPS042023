@@ -69,6 +69,14 @@ void UCodeRiffleAnim::PlayHurtAnimation()
 	}
 }
 
+void UCodeRiffleAnim::PlayReloadAnimation()
+{
+	if (ReloadAnimation != nullptr)
+	{
+		PlaySlotAnimationAsDynamicMontage(ReloadAnimation, "Action", 0.25f, 0.25f, 1.0f, 1);
+	}
+}
+
 void UCodeRiffleAnim::SetDebugShootTrue()
 {
 	DebugShoot = true;
@@ -80,6 +88,11 @@ void UCodeRiffleAnim::PersonaUpdate()
 	{
 		DebugShoot = false;
 		PlayShootAnimation();
+	}
+	if (DebugReload)
+	{
+		DebugReload = false;
+		PlayReloadAnimation();
 	}
 }
 

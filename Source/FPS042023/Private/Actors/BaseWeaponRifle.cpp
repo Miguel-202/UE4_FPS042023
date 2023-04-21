@@ -20,13 +20,10 @@ ABaseWeaponRifle::ABaseWeaponRifle()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	//OwningPawn = Cast<APawn>(GetParentActor());
-	/*OwningPawn = Cast<APawn>(GetAttachParentActor());
-	if (nullptr == OwningPawn)
-	{
-		UE_LOG(Game, Error, TEXT("We need a pawn to own this weapon"));
-	}*/
 	SkeletalMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("SkeletalMesh"));
+
+	MaxAmmo = 10;
+	CurrentAmmo = MaxAmmo;
 
 }
 
@@ -43,11 +40,30 @@ void ABaseWeaponRifle::Tick(float DeltaTime)
 
 }
 
+bool ABaseWeaponRifle::CanReload()
+{
+	if (Animating)
+	{
+		return false;
+	}
+	else
+	{
+		Animating = true;
+		StartReloadDelegate.Broadcast();
+	}
+	return true;
+}
+
+bool ABaseWeaponRifle::CanShoot()
+{
+	return CurrentAmmo > 0 && !Animating;
+}
 
 void ABaseWeaponRifle::Shoot()
 {
 	if (CanShoot())
 	{
+		UseAmmo();
 		// Spawn the projectile at the location of the MuzzleFlashSocket
 		TSubclassOf<ABaseProjectile> Projectile = UBaseProjectile;
 		FVector SpawnLocation = SkeletalMesh->GetSocketLocation("MuzzleFlashSocket");
@@ -64,6 +80,19 @@ void ABaseWeaponRifle::Shoot()
 	}
 }
 
+void ABaseWeaponRifle::Reload()
+{
+	CurrentAmmo = MaxAmmo;
+	AmmoChangeDelegate.Broadcast(CurrentAmmo, MaxAmmo);
+}
+
+void ABaseWeaponRifle::UseAmmo()
+{
+	CurrentAmmo = FMath::Clamp(CurrentAmmo - 1, 0.0f, MaxAmmo);
+	AmmoChangeDelegate.Broadcast(CurrentAmmo, MaxAmmo);
+
+}
+
 void ABaseWeaponRifle::SetOwningPawn(APawn* NewOwningPawn)
 {
 	OwningPawn = NewOwningPawn;
@@ -72,6 +101,7 @@ void ABaseWeaponRifle::SetOwningPawn(APawn* NewOwningPawn)
 void ABaseWeaponRifle::OnAnimationCompleted()
 {
 	Animating = false;
+	CharacterActionEndedDelegate.Broadcast();
 }
 
 FRotator ABaseWeaponRifle::GetShootRotation()
@@ -115,6 +145,7 @@ void ABaseWeaponRifle::PostEditChangeProperty(FPropertyChangedEvent& PropertyCha
 {
 	
 }
+
 
 
 

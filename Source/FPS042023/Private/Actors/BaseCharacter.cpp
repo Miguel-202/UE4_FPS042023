@@ -49,6 +49,9 @@ void ABaseCharacter::BeginPlay()
             //Atach to socket
             FName socketName = "WeaponSocket";
             Weapon->SkeletalMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
+
+            Weapon->AmmoChangeDelegate.AddDynamic(this, &ABaseCharacter::AmmoChange);
+            Weapon->StartReloadDelegate.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayReloadAnimation);
         }
     }
 }
@@ -65,6 +68,10 @@ void ABaseCharacter::CharacterDeath()
     GetCapsuleComponent()->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
+void ABaseCharacter::ActionEnded()
+{
+}
+
 void ABaseCharacter::Shoot()
 {
     if (Weapon->CanShoot() && HealthComponent->isAlive)
@@ -72,5 +79,21 @@ void ABaseCharacter::Shoot()
         Weapon->Shoot();
         CodeRiffleAnimInstance->OnCharacterShoot.Broadcast();
     }
+}
+
+void ABaseCharacter::AmmoChange(float _CurrentAmmo, float _MaxAmmo)
+{
+}
+
+void ABaseCharacter::Reload()
+{
+    if (Weapon->CanReload())
+    {
+        FTimerHandle ReloadTimerHandle;
+        GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, [this]()
+            {
+                Weapon->Reload();
+            }, Weapon->reloadTime, false);
+	}
 }
 

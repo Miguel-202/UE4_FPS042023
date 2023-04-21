@@ -17,4 +17,6 @@ class FPS042023_API UCodeBTTask_Shoot : public UBTTaskNode
 public:
 	//Event recibe execute task AI
 	virtual EBTNodeResult::Type ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory) override;
+protected:
+	FName MessageName;
 };

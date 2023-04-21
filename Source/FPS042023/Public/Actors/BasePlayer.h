@@ -23,6 +23,9 @@ protected:
 
 	void MoveForward(float AxisValue);
 	void MoveRight(float AxisValue);
+
+	virtual void AmmoChange(float CurrentAmmo, float MaxAmmo) override;
+
 	
 public:
 	ABasePlayer();
@@ -46,5 +49,6 @@ public:
 
 	//Override the function from BaseCharacter
 	virtual void CharacterDeath() override;
+
 
 };

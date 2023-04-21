@@ -9,7 +9,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include <Kismet/GameplayStaticsTypes.h>
 #include "Blueprint/SlateBlueprintLibrary.h" 
-
+#include "Components/TextBlock.h"
 
 //TODO DELETE AFTER DEBUG
 #include <DrawDebugHelpers.h>
@@ -19,6 +19,11 @@
 UMyUserWidget::UMyUserWidget(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	SetHealthBarPercent(1.0);
+}
+
+UMyUserWidget::~UMyUserWidget()
+{
+	RemoveFromParent();
 }
 
 void UMyUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
@@ -106,7 +111,7 @@ void UMyUserWidget::SetMaterialColor(FLinearColor Color)
 {
 	if (DynamicReticleMaterial)
 	{
-		DynamicReticleMaterial->SetVectorParameterValue(FName("Color"), Color);
+		DynamicReticleMaterial->SetVectorParameterValue(ColorParamName, Color);
 	}
 }
 
@@ -151,6 +156,31 @@ void UMyUserWidget::GetAimedPoint(FVector& HitLocation, FVector& EndPoint, bool&
 	EndPoint = HitScanEnd;
 	IsHitValid = IsHitScanValid;
 }
+
+void UMyUserWidget::SetAmmoText(float CurrentAmmo, float MaxAmmo)
+{
+	FString CurrentAmmoString = FString::SanitizeFloat(CurrentAmmo);
+	FString MaxAmmoString = FString::SanitizeFloat(MaxAmmo);
+
+	FString AmmoString = FString::Printf(TEXT("%s / %s"), *CurrentAmmoString, *MaxAmmoString);
+	if (CurrentAmmoText != nullptr)
+	{
+		CurrentAmmoText->SetText(FText::FromString(CurrentAmmoString));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Should reload but current amo text is null")));
+	}
+	if (MaxAmmoText != nullptr)
+	{
+		MaxAmmoText->SetText(FText::FromString(MaxAmmoString));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Should reload but max amo text is null")));
+	}
+}
+
 
 
 

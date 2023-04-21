@@ -18,6 +18,7 @@ class FPS042023_API UMainMenuWidget : public UUserWidget
 	
 public:
 	UMainMenuWidget(const FObjectInitializer& ObjectInitializer);
+	~UMainMenuWidget();
 	virtual void NativePreConstruct() override;
 
 	UFUNCTION(BlueprintCallable, Category = "Button")

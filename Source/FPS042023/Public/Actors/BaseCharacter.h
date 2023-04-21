@@ -36,9 +36,15 @@ protected:
 	UPROPERTY()
 	UCodeRiffleAnim* CodeRiffleAnimInstance;
 
+	//character ammo changed function
+	UFUNCTION()
+	virtual void AmmoChange(float CurrentAmmo, float MaxAmmo);
+
 public:	
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	void Shoot();
+	UFUNCTION(BlueprintCallable, Category = "Shooting")
+	void Reload();
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -54,4 +60,7 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	virtual void CharacterDeath();
+
+	UFUNCTION(BlueprintCallable, Category = "Events")
+	virtual void ActionEnded();
 };

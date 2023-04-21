@@ -3,6 +3,9 @@
 
 #include "Actors/BaseAI.h"
 #include "Interfaces/ShooterInterface.h"
+#include "BehaviorTree/BlackboardComponent.h"
+#include <AIController.h>
+#include <Blueprint/AIBlueprintHelperLibrary.h>
 
 //Set the tick to true and create the tick function
 ABaseAI::ABaseAI() : ABaseCharacter()
@@ -18,6 +21,11 @@ void ABaseAI::BeginPlay()
 {
     Super::BeginPlay();
     CodeRiffleAnimInstance->OnCharacterDeath.AddDynamic(this, &ABaseAI::AIDeath);
+    BehaviorTreeComponent = NewObject<UBehaviorTreeComponent>(GetOwner());
+    BehaviorTreeComponent->RegisterComponent();
+    Weapon->Reload();
+    Weapon->CharacterActionEndedDelegate.AddDynamic(this, &ABaseAI::ActionEnded);
+    MessageName = "ActionFinished";
 }
 
 void ABaseAI::ShootInterface()
@@ -25,17 +33,41 @@ void ABaseAI::ShootInterface()
     Super::Shoot(); 
 }
 
+void ABaseAI::ReloadInterface()
+{
+	Super::Reload();
+}
+
 //Ai death count
 void ABaseAI::AIDeath()
 {
-    //stop ai logic
-    UBehaviorTreeComponent* BehaviorTreeComponent = FindComponentByClass<UBehaviorTreeComponent>();
     if (BehaviorTreeComponent)
     {
 		BehaviorTreeComponent->StopTree(EBTStopMode::Safe);
 	} 
     OnDestroyed.Broadcast(this);
     Destroy();
+}
+
+void ABaseAI::AmmoChange(float CurrentAmmo, float MaxAmmo)
+{
+    Super::AmmoChange(CurrentAmmo, MaxAmmo);
+    //update the float ammo count on my blackboard of my ai controller
+    if (BehaviorTreeComponent)
+    {
+        UBlackboardComponent* BlackboardComponent = BehaviorTreeComponent->GetBlackboardComponent();
+        if (BlackboardComponent)
+        {
+            BlackboardComponent->SetValueAsFloat("Ammo", CurrentAmmo);
+        }
+	}
+}
+
+void ABaseAI::ActionEnded()
+{
+    UAIBlueprintHelperLibrary::SendAIMessage(this, MessageName, this, true);
+    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Action Ended");
+
 }
 
 

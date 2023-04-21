@@ -8,6 +8,8 @@ AMainMenuController::AMainMenuController()
 	bShowMouseCursor = true;
 	bEnableClickEvents = true;
 	bEnableMouseOverEvents = true;
+	//disable tick Start with tick enabled = false
+	PrimaryActorTick.bCanEverTick = false;
 
 }
 
