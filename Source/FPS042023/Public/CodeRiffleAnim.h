@@ -52,6 +52,8 @@ public:
 	class UAnimSequence* HurtAnimation;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	class UAnimSequence* ReloadAnimation;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	class UAnimSequence* HealAnimation;
 
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void SetDebugShootTrue();
@@ -62,6 +64,8 @@ public:
 	void PlayDeathAnimation();
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void PlayHurtAnimation();
+	UFUNCTION(BlueprintCallable, Category = "Animations")
+	void PlayHealAnimation();
 	//play reload animation
 	UFUNCTION(BlueprintCallable, Category = "Animations")
 	void PlayReloadAnimation();

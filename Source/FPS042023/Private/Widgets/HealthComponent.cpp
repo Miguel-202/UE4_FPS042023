@@ -60,7 +60,12 @@ void UHealthComponent::HandleDamageDel(AActor* DamagedActor, float Damage, const
 			}
 			else
 			{
-				OnCharacterHurt.Broadcast();
+				if (Damage > 0)
+					OnCharacterHurt.Broadcast();
+				else
+				{
+					OnCharacterHeal.Broadcast();
+				}
 			}
 		}
 	}

@@ -3,6 +3,7 @@
 
 #include "Actors/Pickups/DamagePickup.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "GameFramework/DamageType.h"
 
 
 ADamagePickup::ADamagePickup() 
@@ -13,13 +14,22 @@ ADamagePickup::ADamagePickup()
 	ParticleSystem->SetWorldScale3D(FVector(0.5f, 0.5f, 0.35f));
 	ParticleSystem->SetupAttachment(GetRootComponent());
 	ParticleSystem->SetRelativeLocation(FVector(0.f, 0.f, 0.f));
-	//RootComponent = ParticleSystem;
 }
 
 void ADamagePickup::HandlePostPickup(ABasePlayer* Player)
 {
-	Player->TakeDamage(DamageAmount, FDamageEvent(), nullptr, nullptr);
-	Super::HandlePostPickup(Player);
+	if (DamageType)
+	{
+		FDamageEvent DamageEvent(DamageType);
+		Player->TakeDamage(DamageAmount, DamageEvent, nullptr, nullptr);
+		//log damage type
+		UE_LOG(LogTemp, Warning, TEXT("Damage Type: %s"), *DamageType->GetName());
+	}
+	else
+	{
+		Player->TakeDamage(DamageAmount, FDamageEvent(), nullptr, nullptr);
+	}
+	ABasePickup::HandlePostPickup(Player);
 }
 
 

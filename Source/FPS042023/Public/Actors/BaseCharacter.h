@@ -63,4 +63,10 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Events")
 	virtual void ActionEnded();
+	UFUNCTION(BlueprintCallable, Category = "Events")
+	bool IsFullHealth();
+
+	//BPEffectsComponent
+	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	
 };

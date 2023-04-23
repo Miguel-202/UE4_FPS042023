@@ -31,6 +31,7 @@ void ABaseCharacter::BeginPlay()
         HealthComponent->OnCharacterDeath.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayDeathAnimation);
         HealthComponent->OnCharacterDeath.AddDynamic(this, &ABaseCharacter::CharacterDeath);
         HealthComponent->OnCharacterHurt.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayHurtAnimation);
+        HealthComponent->OnCharacterHeal.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayHealAnimation);
 
         CodeRiffleAnimInstance->OnCharacterShoot.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::SetDebugShootTrue);
     }
@@ -97,3 +98,22 @@ void ABaseCharacter::Reload()
 	}
 }
 
+bool ABaseCharacter::IsFullHealth()
+{
+    if (HealthComponent != nullptr)
+    {
+        if (HealthComponent->GetHealth() >= HealthComponent->GetMaxHealth())
+        {
+			return true;
+		}
+        else
+        {
+            return false;
+        }
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("HealthComponent is nullptr"));
+        return false;
+    }
+}
