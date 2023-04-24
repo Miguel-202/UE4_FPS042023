@@ -13,11 +13,10 @@ ABaseCharacter::ABaseCharacter()
     SkeletalMeshComponent->SetWorldRotation(FRotator(0.0f, -90.0f, 0.0f));
     Weapon = nullptr;
 
-    
     HealthComponent = CreateDefaultSubobject<UHealthComponent>(TEXT("HealthComponent"));
-    
-    
-
+    EffectComponent = CreateDefaultSubobject<UEffectComponent>(TEXT("EffectComponent"));
+    EffectComponent->SetupAttachment(SkeletalMeshComponent);
+    EffectComponent->SetRelativeLocation(FVector(0.0f, 0.0f, 140.0f));
 }
 
 // Called when the game starts or when spawned

@@ -3,6 +3,7 @@
 
 #include "Actors/Effects/Effects_Fire.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Widgets/EffectComponent.h"
 #include <Kismet/GameplayStatics.h>
 
 // Sets default values

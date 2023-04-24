@@ -7,6 +7,7 @@
 #include "Widgets/HealthComponent.h"
 #include "Delegates/Delegate.h"
 #include "CodeRiffleAnim.h"
+#include "Widgets/EffectComponent.h"
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
@@ -66,7 +67,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category = "Events")
 	bool IsFullHealth();
 
-	//BPEffectsComponent
-	//UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	//UEffectComponent
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	class UEffectComponent* EffectComponent;
 	
 };
