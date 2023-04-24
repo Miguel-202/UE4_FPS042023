@@ -23,37 +23,9 @@ ABaseCharacter::ABaseCharacter()
 void ABaseCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-    CodeRiffleAnimInstance = Cast<UCodeRiffleAnim>(AnimInstance);
-    if (nullptr != HealthComponent && nullptr != CodeRiffleAnimInstance)
-    {
-        HealthComponent->OnCharacterDeath.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayDeathAnimation);
-        HealthComponent->OnCharacterDeath.AddDynamic(this, &ABaseCharacter::CharacterDeath);
-        HealthComponent->OnCharacterHurt.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayHurtAnimation);
-        HealthComponent->OnCharacterHeal.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayHealAnimation);
-
-        CodeRiffleAnimInstance->OnCharacterShoot.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::SetDebugShootTrue);
-    }
-    else
-    {
-        UE_LOG(LogTemp, Error, TEXT("HealthComponent or CodeRiffleAnimInstance is nullptr"));
-    }
-
-    if (WeaponClass)
-    {
-        const FTransform orientationSocket = GetMesh()->GetSocketTransform("WeaponSocket", ERelativeTransformSpace::RTS_World);
-        Weapon = GetWorld()->SpawnActor<ABaseWeaponRifle>(WeaponClass, orientationSocket);
-        if (Weapon)
-        {
-            Weapon->SetOwningPawn(this);
-            //Atach to socket
-            FName socketName = "WeaponSocket";
-            Weapon->SkeletalMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
-
-            Weapon->AmmoChangeDelegate.AddDynamic(this, &ABaseCharacter::AmmoChange);
-            Weapon->StartReloadDelegate.AddDynamic(CodeRiffleAnimInstance, &UCodeRiffleAnim::PlayReloadAnimation);
-        }
-    }
+    SetReferences();
+    BindEvents();
+    BindWeaponAndAnimationEvents();
 }
 
 // Called every frame
@@ -77,7 +49,7 @@ void ABaseCharacter::Shoot()
     if (Weapon->CanShoot() && HealthComponent->isAlive)
     {
         Weapon->Shoot();
-        CodeRiffleAnimInstance->OnCharacterShoot.Broadcast();
+        CurrentAnimInstance->OnCharacterShoot.Broadcast();
     }
 }
 
@@ -115,4 +87,99 @@ bool ABaseCharacter::IsFullHealth()
         UE_LOG(LogTemp, Error, TEXT("HealthComponent is nullptr"));
         return false;
     }
+}
+
+void ABaseCharacter::BindEvents()
+{
+    if (nullptr != HealthComponent)
+    {
+        HealthComponent->OnCharacterDeath.AddDynamic(this, &ABaseCharacter::CharacterDeath);
+    }
+    else
+    {
+		UE_LOG(LogTemp, Error, TEXT("HealthComponent is nullptr"));
+	}
+
+}
+
+void ABaseCharacter::BindWeaponAndAnimationEvents()
+{
+    UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+    CurrentAnimInstance = Cast<UCodeRiffleAnim>(AnimInstance);
+    if (nullptr != Weapon)
+    {
+        Weapon->AmmoChangeDelegate.AddDynamic(this, &ABaseCharacter::AmmoChange);
+        Weapon->StartReloadDelegate.AddDynamic(CurrentAnimInstance, &UCodeRiffleAnim::PlayReloadAnimation);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("Weapon is nullptr"));
+    }
+    if (nullptr != CurrentAnimInstance)
+    {
+        CurrentAnimInstance->OnCharacterShoot.AddDynamic(CurrentAnimInstance, &UCodeRiffleAnim::SetDebugShootTrue);
+    }
+    else
+    {
+        UE_LOG(LogTemp, Error, TEXT("CodeRiffleAnimInstance is nullptr"));
+    }
+    if (nullptr != HealthComponent)
+    {
+        HealthComponent->OnCharacterDeath.AddDynamic(CurrentAnimInstance, &UCodeRiffleAnim::PlayDeathAnimation);
+        HealthComponent->OnCharacterHurt.AddDynamic(CurrentAnimInstance, &UCodeRiffleAnim::PlayHurtAnimation);
+        HealthComponent->OnCharacterHeal.AddDynamic(CurrentAnimInstance, &UCodeRiffleAnim::PlayHealAnimation);
+    }
+    else
+    {
+		UE_LOG(LogTemp, Error, TEXT("HealthComponent is nullptr"));
+	}
+}
+
+void ABaseCharacter::SetReferences()
+{
+    if (CurrentWeaponClass)
+    {
+        orientationSocket = GetMesh()->GetSocketTransform("WeaponSocket", ERelativeTransformSpace::RTS_World);
+        if(Weapon != nullptr)
+            Weapon->Destroy();
+        Weapon = GetWorld()->SpawnActor<ABaseWeaponRifle>(CurrentWeaponClass, orientationSocket);
+        if (Weapon)
+        {
+            Weapon->SetOwningPawn(this);
+            //Atach to socket
+            FName socketName = "WeaponSocket";
+            Weapon->SkeletalMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::SnapToTargetIncludingScale, socketName);
+            GetMesh()->SetAnimInstanceClass(Weapon->WeaponInfo.WeaponAnimInstance);
+        }
+        else
+        {
+			UE_LOG(LogTemp, Error, TEXT("Weapon Incorrectly created"));
+        }
+    }
+    else
+    {
+		UE_LOG(LogTemp, Error, TEXT("WeaponClass is nullptr"));
+    }
+}
+
+void ABaseCharacter::SwapWeapon()
+{
+    if (CurrentWeaponClass == nullptr)
+    {
+        CurrentWeaponClass = WeaponClass1;
+    }
+    else
+    {
+        if (CurrentWeaponClass == WeaponClass1)
+        {
+			CurrentWeaponClass = WeaponClass2;
+		}
+        else
+        {
+			CurrentWeaponClass = WeaponClass1;
+		}
+    }
+    SetReferences();
+    BindWeaponAndAnimationEvents();
+    Weapon->UpdateAmmo();
 }

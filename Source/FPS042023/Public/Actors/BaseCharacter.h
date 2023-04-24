@@ -29,13 +29,18 @@ protected:
 	virtual void BeginPlay() override;
 
 	UPROPERTY(EditDefaultsOnly, Category = "Shooting")
-	TSubclassOf<ABaseWeaponRifle> WeaponClass;
+	TSubclassOf<ABaseWeaponRifle> CurrentWeaponClass;
+	UPROPERTY(EditDefaultsOnly, Category = "Shooting")
+	TSubclassOf<ABaseWeaponRifle> WeaponClass1;
+	UPROPERTY(EditDefaultsOnly, Category = "Shooting")
+	TSubclassOf<ABaseWeaponRifle> WeaponClass2;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	class ABaseWeaponRifle* Weapon;
 
 	UPROPERTY()
-	UCodeRiffleAnim* CodeRiffleAnimInstance;
+	UCodeRiffleAnim* CurrentAnimInstance;
+
 
 	//character ammo changed function
 	UFUNCTION()
@@ -70,5 +75,18 @@ public:
 	//UEffectComponent
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
 	class UEffectComponent* EffectComponent;
+
+	//Bind events function
+	UFUNCTION(BlueprintCallable, Category = "Events")
+	void BindEvents();
+	UFUNCTION(BlueprintCallable, Category = "Events")
+	void BindWeaponAndAnimationEvents();
+	//Set references function
+	UFUNCTION(BlueprintCallable, Category = "Events")
+	void SetReferences();
+
+	FTransform orientationSocket;
 	
+	UFUNCTION(BlueprintCallable, Category = "Shooting")
+	void SwapWeapon();
 };

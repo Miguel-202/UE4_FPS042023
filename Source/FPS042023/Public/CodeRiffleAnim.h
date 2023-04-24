@@ -76,5 +76,4 @@ public:
 
 	FTimerHandle CanShootTimerHandle;
 	FTimerHandle DeathTimerHandle;
-	
 };

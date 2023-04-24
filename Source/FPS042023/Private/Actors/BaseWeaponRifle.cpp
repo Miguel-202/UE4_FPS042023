@@ -80,16 +80,21 @@ void ABaseWeaponRifle::Shoot()
 	}
 }
 
+void ABaseWeaponRifle::UpdateAmmo()
+{
+	AmmoChangeDelegate.Broadcast(CurrentAmmo, MaxAmmo);
+}
+
 void ABaseWeaponRifle::Reload()
 {
 	CurrentAmmo = MaxAmmo;
-	AmmoChangeDelegate.Broadcast(CurrentAmmo, MaxAmmo);
+	UpdateAmmo();
 }
 
 void ABaseWeaponRifle::UseAmmo()
 {
 	CurrentAmmo = FMath::Clamp(CurrentAmmo - 1, 0.0f, MaxAmmo);
-	AmmoChangeDelegate.Broadcast(CurrentAmmo, MaxAmmo);
+	UpdateAmmo();
 
 }
 

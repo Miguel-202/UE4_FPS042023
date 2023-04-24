@@ -10,6 +10,7 @@
 #include <Kismet/GameplayStaticsTypes.h>
 #include "Blueprint/SlateBlueprintLibrary.h" 
 #include "Components/TextBlock.h"
+#include "Components/WidgetSwitcher.h"
 
 //TODO DELETE AFTER DEBUG
 #include <DrawDebugHelpers.h>
@@ -63,38 +64,44 @@ void UMyUserWidget::NativeTick(const FGeometry& MyGeometry, float InDeltaTime)
 		{
 			if (HitActor->ActorHasTag("Enemy"))
 			{
-				SetMaterialColor(DangerColor);
+				SetMaterialColor(DangerColor, currentReticleIndex);
 			}
 			else
 			{
-				SetMaterialColor(WarningColor);
+				SetMaterialColor(WarningColor, currentReticleIndex);
 			}
 		}
 		else
 		{
-			SetMaterialColor(SafeColor);
+			SetMaterialColor(SafeColor, currentReticleIndex);
 		}
 	}
 	else
 	{
-		SetMaterialColor(Defaultcolor);
+		SetMaterialColor(Defaultcolor, currentReticleIndex);
 	}
 }
 
 void UMyUserWidget::RunOnBeginPlay()
-{
-	// Cast the brush to a UMaterialInterface
-	UMaterialInterface* MaterialInterface = Cast<UMaterialInterface>(Reticle->Brush.GetResourceObject());
-	// Create a dynamic material instance
-	if (MaterialInterface)
+{	
+	currentReticleIndex = 0;
+	ReticleSwitcher->SetActiveWidgetIndex(currentReticleIndex);
+	for (int i = 0; i < 2; i++)
 	{
-		DynamicReticleMaterial = UMaterialInstanceDynamic::Create(MaterialInterface, this);
+		Reticle = Cast<UImage>(ReticleSwitcher->GetWidgetAtIndex(i));
+		// Cast the brush to a UMaterialInterface
+		UMaterialInterface* MaterialInterface = Cast<UMaterialInterface>(Reticle->Brush.GetResourceObject());
+		// Create a dynamic material instance
+		if (MaterialInterface)
+		{
+			DynamicReticleMaterial[i] = UMaterialInstanceDynamic::Create(MaterialInterface, this);
+		}
+		Reticle->SetBrushFromMaterial(DynamicReticleMaterial[i]);
 	}
-	Reticle->SetBrushFromMaterial(DynamicReticleMaterial);
 
 	AddToViewport();
 	OnUpdateHealth.AddDynamic(this, &UMyUserWidget::SetHealthBarPercent);
-	SetMaterialColor(DangerColor);
+	SetMaterialColor(DangerColor, currentReticleIndex);
 
 	
 }
@@ -107,11 +114,11 @@ void UMyUserWidget::SetHealthBarPercent(float Percent)
 	}
 }
 
-void UMyUserWidget::SetMaterialColor(FLinearColor Color)
+void UMyUserWidget::SetMaterialColor(FLinearColor Color, int32 materialIndex)
 {
-	if (DynamicReticleMaterial)
+	if (DynamicReticleMaterial[materialIndex])
 	{
-		DynamicReticleMaterial->SetVectorParameterValue(ColorParamName, Color);
+		DynamicReticleMaterial[materialIndex]->SetVectorParameterValue(ColorParamName, Color);
 	}
 }
 
@@ -120,7 +127,7 @@ void UMyUserWidget::NativeConstruct()
 	Super::NativeConstruct();
 	// Get the widgets
 	HealthBar = Cast<UProgressBar>(GetWidgetFromName(TEXT("HealthBar")));
-	Reticle = Cast<UImage>(GetWidgetFromName(TEXT("Reticle")));
+	ReticleSwitcher = Cast<UWidgetSwitcher>(GetWidgetFromName(TEXT("ReticleSwitcher")));
 }
 
 void UMyUserWidget::GetLinePoints(FVector& Start, FVector& End)
@@ -130,7 +137,7 @@ void UMyUserWidget::GetLinePoints(FVector& Start, FVector& End)
     {
 		FVector2D LocalPosition = FVector2D::ZeroVector;
 		FVector2D UnusedViewportPosition;
-		USlateBlueprintLibrary::LocalToViewport(Reticle->GetWorld(), Reticle->GetCachedGeometry(), FVector2D(0.5f, 0.5f), LocalPosition, UnusedViewportPosition);
+		USlateBlueprintLibrary::LocalToViewport(Reticle->GetWorld(), Cast<UImage>(ReticleSwitcher->GetWidgetAtIndex(currentReticleIndex))->GetCachedGeometry(), FVector2D(0.5f, 0.5f), LocalPosition, UnusedViewportPosition);
 		FVector2D ReticleSize = Reticle->GetCachedGeometry().GetLocalSize() * 0.5f;
 		LocalPosition += FVector2D(ReticleSize.X, ReticleSize.Y);
 
@@ -179,6 +186,17 @@ void UMyUserWidget::SetAmmoText(float CurrentAmmo, float MaxAmmo)
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Should reload but max amo text is null")));
 	}
+}
+
+void UMyUserWidget::SetIconSwitcher(int32 WeaponIndex)
+{
+	//set active widget index to the index of the weapon
+	IconSwitcher->SetActiveWidgetIndex(WeaponIndex);
+	ReticleSwitcher->SetActiveWidgetIndex(WeaponIndex);
+	currentReticleIndex = WeaponIndex;
+	Reticle = Cast<UImage>(ReticleSwitcher->GetWidgetAtIndex(WeaponIndex));
+	//Print to screen the current image in the reticle switcher 
+	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Current reticle index is %d"), ReticleSwitcher->GetActiveWidget()));
 }
 
 
