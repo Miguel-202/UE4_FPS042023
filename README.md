@@ -26,7 +26,6 @@ Gameplay Framework<br>
 Level Streaming<br>
 Navigation Mesh<br>
 Physical Materials<br>
-Future Improvements<br>
 ## Possible future improvements for this project include:
 
 More diverse enemy types with different attack patterns<br>
