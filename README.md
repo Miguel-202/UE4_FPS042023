@@ -26,6 +26,12 @@ Gameplay Framework<br>
 Level Streaming<br>
 Navigation Mesh<br>
 Physical Materials<br>
+## Controls
+- -WASD- to move around
+- -Left click- to shoot
+- -Q- to switch to Sticky Gun and back
+- -Right click- to explode Sticky Grenades
+- -R- to reload your weapon
 ## Possible future improvements for this project include:
 
 More diverse enemy types with different attack patterns<br>
