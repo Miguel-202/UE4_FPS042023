@@ -71,6 +71,12 @@ void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 
     // Bind heal input
     //PlayerInputComponent->BindAction("Heal", IE_Pressed, this, &ABasePlayer::Heal);
+
+    //Bind swap weapon input
+    PlayerInputComponent->BindAction("SwapWeapon", IE_Pressed, this, &ABasePlayer::SwapWeaponInput);
+
+    //Bind super power input
+    PlayerInputComponent->BindAction("SuperPower", IE_Pressed, this, &ABasePlayer::CallSpecialPower);
     
 }
 
@@ -116,4 +122,21 @@ void ABasePlayer::CharacterDeath()
         PlayerController->bShowMouseCursor = true;
         PlayerController->bEnableClickEvents = true;
     }
+}
+
+void ABasePlayer::SwapWeaponInput()
+{
+    ABaseCharacter::SwapWeapon();
+    HUD->SetIconSwitcher(Weapon->WeaponInfo.WeaponIconIndex);
+}
+
+void ABasePlayer::SetNewMaxAmmo(float newMaxAmmo)
+{
+    Weapon->MaxAmmo = Weapon->MaxAmmo + newMaxAmmo;
+    AmmoChange(Weapon->CurrentAmmo, Weapon->MaxAmmo);
+}
+
+bool ABasePlayer::CanUpgradeClipSize()
+{
+    return true;
 }

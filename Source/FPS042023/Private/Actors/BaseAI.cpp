@@ -14,13 +14,13 @@ ABaseAI::ABaseAI() : ABaseCharacter()
     Tags.Empty();
     Tags.Add("Enemy");
     UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
-    CodeRiffleAnimInstance = Cast<UCodeRiffleAnim>(AnimInstance);
+    CurrentAnimInstance = Cast<UCodeRiffleAnim>(AnimInstance);
 }
 
 void ABaseAI::BeginPlay()
 {
     Super::BeginPlay();
-    CodeRiffleAnimInstance->OnCharacterDeath.AddDynamic(this, &ABaseAI::AIDeath);
+    CurrentAnimInstance->OnCharacterDeath.AddDynamic(this, &ABaseAI::AIDeath);
     BehaviorTreeComponent = NewObject<UBehaviorTreeComponent>(GetOwner());
     BehaviorTreeComponent->RegisterComponent();
     Weapon->Reload();

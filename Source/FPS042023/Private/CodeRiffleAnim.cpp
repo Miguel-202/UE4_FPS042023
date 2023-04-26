@@ -69,6 +69,14 @@ void UCodeRiffleAnim::PlayHurtAnimation()
 	}
 }
 
+void UCodeRiffleAnim::PlayHealAnimation()
+{
+	if (HealAnimation != nullptr)
+	{
+		PlaySlotAnimationAsDynamicMontage(HealAnimation, "Damage", 0.25f, 0.25f, 1.0f, 1);
+	}
+}
+
 void UCodeRiffleAnim::PlayReloadAnimation()
 {
 	if (ReloadAnimation != nullptr)

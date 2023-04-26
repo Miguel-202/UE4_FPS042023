@@ -25,7 +25,6 @@ protected:
 	void MoveRight(float AxisValue);
 
 	virtual void AmmoChange(float CurrentAmmo, float MaxAmmo) override;
-
 	
 public:
 	ABasePlayer();
@@ -47,8 +46,13 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateHealthBar(float HealthRatio);
 
-	//Override the function from BaseCharacter
 	virtual void CharacterDeath() override;
 
+	UFUNCTION(BlueprintCallable)
+	void SwapWeaponInput();
+	UFUNCTION(BlueprintCallable)
+	void SetNewMaxAmmo(float newMaxAmmo);
+
+	bool CanUpgradeClipSize();
 
 };

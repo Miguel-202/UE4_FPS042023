@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Actors/Pickups/BasePickup.h"
+#include "GameFramework/DamageType.h"
 #include "DamagePickup.generated.h"
 
 /**
@@ -26,4 +27,7 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage", meta = (AllowPrivateAccess = "true"))
 	float DamageAmount = 10.f;
+	//damage type from damaga type class
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Damage", meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<UDamageType>  DamageType;
 };

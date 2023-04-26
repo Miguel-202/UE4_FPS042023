@@ -7,7 +7,23 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "DelegatesHandlers/DelegateHandlerAmmo.h"
+#include "BaseProjectile.h"
 #include "BaseWeaponRifle.generated.h"
+//include UCodeRiffleAnim
+class UCodeRiffleAnim;
+
+USTRUCT(BlueprintType)
+struct FWeaponInfo
+{
+	GENERATED_BODY()
+
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponInfo")
+	int32 WeaponIconIndex;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponInfo")
+	TSubclassOf<UCodeRiffleAnim> WeaponAnimInstance;
+};
 
 UCLASS()
 class FPS042023_API ABaseWeaponRifle : public AActor
@@ -70,12 +86,21 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	float reloadTime = 1.73;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "WeaponInfo")
+	FWeaponInfo WeaponInfo;
+
 	UFUNCTION()
-	void Shoot();
+	virtual ABaseProjectile* Shoot();
+	UFUNCTION()
+	void UpdateAmmo();
 
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	virtual void Reload();
 
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	virtual void UseAmmo();
+
+	UFUNCTION(BlueprintCallable, Category = "Power")
+	virtual void HandleSpecialPower();
+
 };

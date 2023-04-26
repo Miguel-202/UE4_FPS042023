@@ -25,6 +25,8 @@ public:
 	FOnCharacterDeath OnCharacterDeath;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnCharacterHurt OnCharacterHurt;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnCharacterHeal OnCharacterHeal;
 
 protected:
 	// Called when the game starts
@@ -46,6 +48,8 @@ public:
 	//get helath
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	float GetHealth() { return CurrentHealth; };
+	UFUNCTION(BlueprintCallable, Category = "Health")
+	float GetMaxHealth() { return MaxHealth; };
 
 	UFUNCTION(BlueprintCallable, Category = "Health")
 	void HandleDamageDel(AActor* DamagedActor, float Damage, const UDamageType* DamageType, AController* InstigatedBy, AActor* DamageCauser);

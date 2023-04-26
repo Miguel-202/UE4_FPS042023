@@ -3,6 +3,8 @@
 
 #include "Widgets/HealthComponent.h"
 #include "GameFramework/Actor.h"
+#include "Widgets/EffectComponent.h"
+#include "DamageTypes/DamageTypeFire.h"
 
 
 
@@ -60,7 +62,26 @@ void UHealthComponent::HandleDamageDel(AActor* DamagedActor, float Damage, const
 			}
 			else
 			{
-				OnCharacterHurt.Broadcast();
+				if (DamageType->GetClass() == UDamageTypeFire::StaticClass())
+				{
+					const UDamageTypeFire* FireDamageType = static_cast<const UDamageTypeFire*>(DamageType);
+					if (FireDamageType)
+					{
+
+						UEffectComponent* EffectComponent = GetOwner()->FindComponentByClass<UEffectComponent>();
+						if (EffectComponent)
+						{
+							EffectComponent->StartEffect(EDamageTypes::Fire, DamageCauser);
+						}
+					}
+				}
+
+				if (Damage > 0)
+					OnCharacterHurt.Broadcast();
+				else
+				{
+					OnCharacterHeal.Broadcast();
+				}
 			}
 		}
 	}

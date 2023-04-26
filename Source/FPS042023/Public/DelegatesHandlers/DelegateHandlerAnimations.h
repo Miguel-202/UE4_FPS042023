@@ -11,6 +11,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterDeath);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterShoot);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterHurt);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnCharacterHeal);
 /**
  * 
  */
@@ -29,4 +30,6 @@ public:
 	FOnCharacterShoot CharacterShootDelegate;
 	UPROPERTY(BlueprintAssignable, Category = "Events")
 	FOnCharacterHurt CharacterHurtDelegate;
+	UPROPERTY(BlueprintAssignable, Category = "Events")
+	FOnCharacterHeal CharacterHealDelegate;
 };

@@ -15,18 +15,29 @@ class FPS042023_API UMyUserWidget : public UUserWidget
 protected:
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UProgressBar* HealthBar;
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UWidgetSwitcher* ReticleSwitcher;
+	UPROPERTY(BlueprintReadOnly)
 	class UImage* Reticle;
+	int32 currentReticleIndex;
+
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
-	class UImage* WeaponIcon;
+	class UWidgetSwitcher* IconSwitcher;
+
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UImage* RiffleIcon;
+	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
+	class UImage* StickyGunIcon;
+
 	//text for current ammo and max ammo
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* CurrentAmmoText;
 	UPROPERTY(BlueprintReadOnly, meta = (BindWidget))
 	class UTextBlock* MaxAmmoText;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Materials")
-	UMaterialInstanceDynamic* DynamicReticleMaterial;
+	UPROPERTY()
+	UMaterialInstanceDynamic* DynamicReticleMaterial[2];
 
 public:
 	UMyUserWidget(const FObjectInitializer& ObjectInitializer);
@@ -47,7 +58,7 @@ public:
 	void SetHealthBarPercent(float Percent);
 
 	UFUNCTION(BlueprintCallable)
-	void SetMaterialColor(FLinearColor Color);
+	void SetMaterialColor(FLinearColor Color, int32 materialIndex);
 
 	void NativeConstruct() override;
 
@@ -60,6 +71,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void SetAmmoText(float CurrentAmmo, float MaxAmmo);
+	UFUNCTION(BlueprintCallable)
+	void SetIconSwitcher(int32 WeaponIndex);
 
 
 private:

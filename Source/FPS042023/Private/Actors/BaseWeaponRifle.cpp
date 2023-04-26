@@ -42,7 +42,7 @@ void ABaseWeaponRifle::Tick(float DeltaTime)
 
 bool ABaseWeaponRifle::CanReload()
 {
-	if (Animating)
+	if (Animating || CurrentAmmo >= MaxAmmo)
 	{
 		return false;
 	}
@@ -59,7 +59,7 @@ bool ABaseWeaponRifle::CanShoot()
 	return CurrentAmmo > 0 && !Animating;
 }
 
-void ABaseWeaponRifle::Shoot()
+ABaseProjectile* ABaseWeaponRifle::Shoot()
 {
 	if (CanShoot())
 	{
@@ -76,21 +76,32 @@ void ABaseWeaponRifle::Shoot()
 		//ABaseProjectile* SpawnedProjectile = GetWorld()->SpawnActor<ABaseProjectile>(Projectile, SpawnLocation, SpawnRotation);
 
 		Animating = true;
+		return SpawnedProjectile;
 
 	}
+	return nullptr;
+}
+
+void ABaseWeaponRifle::UpdateAmmo()
+{
+	AmmoChangeDelegate.Broadcast(CurrentAmmo, MaxAmmo);
 }
 
 void ABaseWeaponRifle::Reload()
 {
 	CurrentAmmo = MaxAmmo;
-	AmmoChangeDelegate.Broadcast(CurrentAmmo, MaxAmmo);
+	UpdateAmmo();
 }
 
 void ABaseWeaponRifle::UseAmmo()
 {
 	CurrentAmmo = FMath::Clamp(CurrentAmmo - 1, 0.0f, MaxAmmo);
-	AmmoChangeDelegate.Broadcast(CurrentAmmo, MaxAmmo);
+	UpdateAmmo();
 
+}
+
+void ABaseWeaponRifle::HandleSpecialPower()
+{
 }
 
 void ABaseWeaponRifle::SetOwningPawn(APawn* NewOwningPawn)
