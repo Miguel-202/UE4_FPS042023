@@ -7,6 +7,7 @@
 #include <Perception/AISenseConfig_Sight.h>
 #include "Perception/AIPerceptionComponent.h"
 #include "BehaviorTree/BlackboardComponent.h"
+#include "Actors/BasePlayer.h"
 
 ABaseAIController::ABaseAIController() : AAIController()
 {
@@ -28,13 +29,18 @@ void ABaseAIController::OnPossess(APawn* InPawn)
 
 void ABaseAIController::OnTargetPerceptionUpdated(AActor* Actor, FAIStimulus Stimulus)
 {
-    // Check if the stimulus is successful
-    if (Stimulus.WasSuccessfullySensed())
+    //cast Actor as Player
+    ABasePlayer* Player = Cast<ABasePlayer>(Actor);
+    if (nullptr != Player)
     {
-        GetBlackboardComponent()->SetValueAsObject(PlayerKey, Actor);
-    }
-    else
-    {
-        GetBlackboardComponent()->ClearValue(PlayerKey);
+        // Check if the stimulus is successful
+        if (Stimulus.WasSuccessfullySensed())
+        {
+            GetBlackboardComponent()->SetValueAsObject(PlayerKey, Player);
+        }
+        else
+        {
+            GetBlackboardComponent()->ClearValue(PlayerKey);
+        }
     }
 }

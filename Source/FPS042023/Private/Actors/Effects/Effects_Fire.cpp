@@ -3,6 +3,7 @@
 
 #include "Actors/Effects/Effects_Fire.h"
 #include "Particles/ParticleSystemComponent.h"
+#include "Components/SceneComponent.h"
 #include "Widgets/EffectComponent.h"
 #include <Kismet/GameplayStatics.h>
 
@@ -28,7 +29,10 @@ void AEffects_Fire::BeginPlay()
 void AEffects_Fire::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	// Update particle system scale based on remaining lifespan
+	float ScaleFactor = InitialLifeSpan > 0 ? (initialSize * (GetLifeSpan() / InitialLifeSpan)) : 0;
+	FVector NewScale = FVector(ScaleFactor);
+	ParticleSystem->SetRelativeScale3D(NewScale);
 	//apply damage to atached actor
 	if (GetAttachParentActor())
 	{

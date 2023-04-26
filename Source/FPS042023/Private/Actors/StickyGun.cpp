@@ -26,7 +26,8 @@ void AStickyGun::HandleSpecialPower()
 	Super::HandleSpecialPower();
 	for (ABaseProjectile* Projectile : ProjectilesShoted)
 	{
-		Projectile->SpecialPower();
+		if (nullptr != Projectile)
+			Projectile->SpecialPower();
 	}
 	ProjectilesShoted.Empty();
 }

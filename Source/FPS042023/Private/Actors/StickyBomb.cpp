@@ -5,12 +5,13 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include <Kismet/GameplayStatics.h>
+#include "Actors/Effects/Effects_Fire.h"
 
 AStickyBomb::AStickyBomb()
 {
 	//Collision->SetSphereRadius(50.f);
-	DamageRadius = 750.f;
-	Damage = 50.f;
+	DamageRadius = 400.f;
+	Damage = 35.f;
 }
 
 void AStickyBomb::HandleCollision(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -49,6 +50,15 @@ void AStickyBomb::HandleCollision(UPrimitiveComponent* OverlappedComponent, AAct
 void AStickyBomb::SpecialPower()
 {
 	Super::SpecialPower();
+	//spawn fire effect
+	if (nullptr != FireEffect)
+	{
+		FActorSpawnParameters SpawnParams;
+		SpawnParams.Owner = this;
+		SpawnParams.Instigator = GetInstigator();
+		AEffects_Fire* Fire = GetWorld()->SpawnActor<AEffects_Fire>(FireEffect, GetActorLocation(), GetActorRotation(), SpawnParams);
+	}
+
 	UGameplayStatics::ApplyRadialDamage(GetWorld(), Damage, GetActorLocation(), DamageRadius, nullptr, TArray<AActor*>(), this, GetInstigatorController(), false, ECC_Visibility);
 	Destroy();
 }

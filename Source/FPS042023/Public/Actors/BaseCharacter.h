@@ -37,6 +37,11 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
 	class ABaseWeaponRifle* Weapon;
+	//Consider for future improvements (array of weapons)
+	/*UPROPERTY()
+	class ABaseWeaponRifle* Weapon1;
+	UPROPERTY()*/
+	class ABaseWeaponRifle* Weapon2;
 
 	UPROPERTY()
 	UCodeRiffleAnim* CurrentAnimInstance;

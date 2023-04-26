@@ -22,5 +22,9 @@ public:
 	virtual void SpecialPower() override;
 
 protected:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Damage")
 	float DamageRadius;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Effects")
+	TSubclassOf<class AEffects_Fire> FireEffect;
 };

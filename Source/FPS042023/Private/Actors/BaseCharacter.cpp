@@ -3,6 +3,7 @@
 
 #include "Actors/BaseCharacter.h"
 #include "Components/CapsuleComponent.h"
+#include "UObject/WeakObjectPtr.h"
 
 // Sets default values
 ABaseCharacter::ABaseCharacter()
@@ -61,19 +62,26 @@ void ABaseCharacter::AmmoChange(float _CurrentAmmo, float _MaxAmmo)
 
 void ABaseCharacter::Reload()
 {
-    if (Weapon->CanReload())
+    if (nullptr != Weapon)
     {
-        FTimerHandle ReloadTimerHandle;
-        GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, [this]()
-            {
-                Weapon->Reload();
-            }, Weapon->reloadTime, false);
-	}
+        if (Weapon->CanReload())
+        {
+            FTimerHandle ReloadTimerHandle;
+            TWeakObjectPtr<ABaseCharacter> WeakThis(this);
+            GetWorld()->GetTimerManager().SetTimer(ReloadTimerHandle, [WeakThis]()
+                {
+                    if (WeakThis.IsValid() && nullptr != WeakThis->Weapon)
+                    {
+                        WeakThis->Weapon->Reload();
+                    }
+                }, Weapon->reloadTime, false);
+        }
+    }
 }
 
 bool ABaseCharacter::IsFullHealth()
 {
-    if (HealthComponent != nullptr)
+    if (nullptr != HealthComponent)
     {
         if (HealthComponent->GetHealth() >= HealthComponent->GetMaxHealth())
         {

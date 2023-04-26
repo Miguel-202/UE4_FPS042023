@@ -29,6 +29,8 @@ protected:
 	//life span
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LifeSpan")
 	float LifeSpan = 2.f;
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "LifeSpan")
+	float initialSize;
 
 public:	
 	// Called every frame

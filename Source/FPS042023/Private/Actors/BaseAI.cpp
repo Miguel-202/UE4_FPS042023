@@ -45,7 +45,6 @@ void ABaseAI::AIDeath()
     {
 		BehaviorTreeComponent->StopTree(EBTStopMode::Safe);
 	} 
-    OnDestroyed.Broadcast(this);
     Destroy();
 }
 
@@ -66,8 +65,6 @@ void ABaseAI::AmmoChange(float CurrentAmmo, float MaxAmmo)
 void ABaseAI::ActionEnded()
 {
     UAIBlueprintHelperLibrary::SendAIMessage(this, MessageName, this, true);
-    GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, "Action Ended");
-
 }
 
 

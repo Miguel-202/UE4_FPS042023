@@ -109,6 +109,11 @@ void ABasePlayer::UpdateHealthBar(float HealthRatio)
 void ABasePlayer::CharacterDeath()
 {
 	HUD->SetVisibility(ESlateVisibility::Hidden);
+    if (HUD != nullptr)
+    {
+        HUD->RemoveFromParent();
+        HUD = nullptr;
+    }
     DisableInput(Cast<APlayerController>(GetController()));
     Super::CharacterDeath();
 

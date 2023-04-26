@@ -18,18 +18,21 @@ ADamagePickup::ADamagePickup()
 
 void ADamagePickup::HandlePostPickup(ABasePlayer* Player)
 {
-	if (DamageType)
+	if (nullptr != Player)
 	{
-		FDamageEvent DamageEvent(DamageType);
-		Player->TakeDamage(DamageAmount, DamageEvent, GetInstigatorController(), this);
-		//log damage type
-		UE_LOG(LogTemp, Warning, TEXT("Damage Type: %s"), *DamageType->GetName());
+		if (DamageType)
+		{
+			FDamageEvent DamageEvent(DamageType);
+			Player->TakeDamage(DamageAmount, DamageEvent, GetInstigatorController(), this);
+			//log damage type
+			UE_LOG(LogTemp, Warning, TEXT("Damage Type: %s"), *DamageType->GetName());
+		}
+		else
+		{
+			Player->TakeDamage(DamageAmount, FDamageEvent(), GetInstigatorController(), this);
+		}
+		ABasePickup::HandlePostPickup(Player);
 	}
-	else
-	{
-		Player->TakeDamage(DamageAmount, FDamageEvent(), GetInstigatorController(), this);
-	}
-	ABasePickup::HandlePostPickup(Player);
 }
 
 

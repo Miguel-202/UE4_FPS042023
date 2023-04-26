@@ -66,13 +66,16 @@ void ABasePickup::HandlePostPickup(ABasePlayer* Player)
 }
 void ABasePickup::HandlePickup(ABasePlayer* Player)
 {
-	if (CanBePickedUp(Player))
+	if (nullptr != Player)
 	{
-		HandlePostPickup(Player);
-	}
-	else
-	{
-		HandleNoPickup(Player);
+		if (CanBePickedUp(Player))
+		{
+			HandlePostPickup(Player);
+		}
+		else
+		{
+			HandleNoPickup(Player);
+		}
 	}
 }
 void ABasePickup::HandleNoPickup(ABasePlayer* Player)
