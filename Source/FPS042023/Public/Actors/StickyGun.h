@@ -16,4 +16,12 @@ class FPS042023_API AStickyGun : public ABaseWeaponRifle
 
 public:
 	AStickyGun();
+
+	ABaseProjectile* Shoot() override;
+
+	virtual void HandleSpecialPower() override;
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Shooting")
+	TArray<class ABaseProjectile*> ProjectilesShoted;
 };

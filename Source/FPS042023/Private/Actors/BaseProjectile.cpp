@@ -29,7 +29,7 @@ ABaseProjectile::ABaseProjectile()
 	Movement->InitialSpeed = 1800.0f;
 	Movement->MaxSpeed = 2000.0f;
 	Movement->ProjectileGravityScale = 0.0f;
-	Damage = 50.0f;
+	Damage = 10.0f;
 	//Movement->bRotationFollowsVelocity = true;
 }
 
@@ -78,5 +78,9 @@ void ABaseProjectile::HandleCollision(UPrimitiveComponent* HitComponent, AActor*
 void ABaseProjectile::DestroyProjectile()
 {
 	Destroy();
+}
+
+void ABaseProjectile::SpecialPower()
+{
 }
 

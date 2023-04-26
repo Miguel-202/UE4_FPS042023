@@ -31,6 +31,8 @@ public:
 	UFUNCTION()
 	void HandleCollision(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 	UFUNCTION()
+	virtual void HandlePickup(ABasePlayer* Player);
+	UFUNCTION()
 	virtual void HandlePostPickup(ABasePlayer* Player);
 	UFUNCTION()
 	virtual void HandleNoPickup(ABasePlayer* Player);

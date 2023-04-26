@@ -74,6 +74,9 @@ void ABasePlayer::SetupPlayerInputComponent(class UInputComponent* PlayerInputCo
 
     //Bind swap weapon input
     PlayerInputComponent->BindAction("SwapWeapon", IE_Pressed, this, &ABasePlayer::SwapWeaponInput);
+
+    //Bind super power input
+    PlayerInputComponent->BindAction("SuperPower", IE_Pressed, this, &ABasePlayer::CallSpecialPower);
     
 }
 
@@ -125,4 +128,15 @@ void ABasePlayer::SwapWeaponInput()
 {
     ABaseCharacter::SwapWeapon();
     HUD->SetIconSwitcher(Weapon->WeaponInfo.WeaponIconIndex);
+}
+
+void ABasePlayer::SetNewMaxAmmo(float newMaxAmmo)
+{
+    Weapon->MaxAmmo = Weapon->MaxAmmo + newMaxAmmo;
+    AmmoChange(Weapon->CurrentAmmo, Weapon->MaxAmmo);
+}
+
+bool ABasePlayer::CanUpgradeClipSize()
+{
+    return true;
 }

@@ -54,9 +54,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Shooting")
-	TSubclassOf<AActor> Bullet;
-
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	ABaseWeaponRifle* GetWeapon() { return Weapon; };
 
@@ -89,4 +86,6 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	void SwapWeapon();
+	UFUNCTION()
+	void CallSpecialPower();
 };

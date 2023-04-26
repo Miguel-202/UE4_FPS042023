@@ -7,6 +7,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "DelegatesHandlers/DelegateHandlerAmmo.h"
+#include "BaseProjectile.h"
 #include "BaseWeaponRifle.generated.h"
 //include UCodeRiffleAnim
 class UCodeRiffleAnim;
@@ -89,7 +90,7 @@ public:
 	FWeaponInfo WeaponInfo;
 
 	UFUNCTION()
-	void Shoot();
+	virtual ABaseProjectile* Shoot();
 	UFUNCTION()
 	void UpdateAmmo();
 
@@ -98,4 +99,8 @@ public:
 
 	UFUNCTION(BlueprintCallable, Category = "Shooting")
 	virtual void UseAmmo();
+
+	UFUNCTION(BlueprintCallable, Category = "Power")
+	virtual void HandleSpecialPower();
+
 };

@@ -195,8 +195,6 @@ void UMyUserWidget::SetIconSwitcher(int32 WeaponIndex)
 	ReticleSwitcher->SetActiveWidgetIndex(WeaponIndex);
 	currentReticleIndex = WeaponIndex;
 	Reticle = Cast<UImage>(ReticleSwitcher->GetWidgetAtIndex(WeaponIndex));
-	//Print to screen the current image in the reticle switcher 
-	GEngine->AddOnScreenDebugMessage(-1, 5.0f, FColor::Red, FString::Printf(TEXT("Current reticle index is %d"), ReticleSwitcher->GetActiveWidget()));
 }
 
 

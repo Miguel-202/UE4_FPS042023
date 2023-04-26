@@ -53,14 +53,7 @@ void ABasePickup::HandleCollision(UPrimitiveComponent* HitComponent, AActor* Oth
 			{
 				// Check if the other pawn is the player. This will ensure that the pickup is only picked up by the player, since it is not logic the AI can use the pickups
 				ABasePlayer* Player = Cast<ABasePlayer>(OtherPawn); //There is no circular reference here, since the BasePlayer nor BaseCharacter class does not reference the BasePickup class
-				if (CanBePickedUp(Player))
-				{
-					HandlePostPickup(Player);
-				}
-				else
-				{
-					HandleNoPickup(Player);
-				}
+				HandlePickup(Player);
 			}
 		}
 
@@ -71,9 +64,19 @@ void ABasePickup::HandlePostPickup(ABasePlayer* Player)
 {
 	Destroy();
 }
+void ABasePickup::HandlePickup(ABasePlayer* Player)
+{
+	if (CanBePickedUp(Player))
+	{
+		HandlePostPickup(Player);
+	}
+	else
+	{
+		HandleNoPickup(Player);
+	}
+}
 void ABasePickup::HandleNoPickup(ABasePlayer* Player)
 {
-
 }
 
 bool ABasePickup::CanBePickedUp(ABasePlayer* Player)
