@@ -6,14 +6,14 @@ This is a third-person shooter project developed in Unreal Engine, initially pla
 ## Features
 The following features have been implemented in this project using C++ in Unreal Engine:
 
-Third-person camera view with character animations and movement<br>
-AI behaviour for enemies, including pathfinding and attacking<br>
-Fire damage that spreads to the player and enemies over time<br>
-Healing pickups and ammo pickups to help the player<br>
-UI with dynamic color changes based on damage type<br>
-Menu system with win and lose conditions<br>
-Nature environment with rivers and trees<br>
-Bullets that travel towards the hit marker on the UI
+- Third-person camera view with character animations and movement<br>
+- AI behaviour for enemies, including pathfinding and attacking<br>
+- Fire damage that spreads to the player and enemies over time<br>
+- Healing pickups and ammo pickups to help the player<br>
+- UI with dynamic color changes based on damage type<br>
+- Menu system with win and lose conditions<br>
+- Nature environment with rivers and trees<br>
+- Bullets that travel towards the hit marker on the UI
 ## Technologies Used
 This project was developed in Unreal Engine using C++ programming language. The project utilizes the following Unreal Engine features:
 
