@@ -1,5 +1,5 @@
 # FPS042023
-# FPS (Third-Person Shooter) Project
+# FPS (Third-Person Shooter) Project The Inferno Hunt
 ## Overview
 This is a third-person shooter project developed in Unreal Engine, initially planned to be a first-person shooter. The project includes AI-controlled enemies, fire damage that spreads to the player, healing pickups, ammo pickups, animations, UI, menu system, win and lose conditions, set in a nature environment with rivers and trees. The bullets travel towards the hit marker on the UI, which dynamically changes color based on the damage type.
 
